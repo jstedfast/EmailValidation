@@ -230,7 +230,7 @@ namespace EmailValidation
 		/// <summary>
 		/// Validate the specified email address.
 		/// </summary>
-		/// <returns><c>true</c> if the email address is valid; otherwise <c>false</c>.
+		/// <returns><c>true</c> if the email address is valid; otherwise <c>false</c>.</returns>
 		/// <param name="email">An email address.</param>
 		public static bool Validate (string email)
 		{
