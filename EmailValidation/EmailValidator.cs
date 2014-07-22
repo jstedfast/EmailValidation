@@ -104,10 +104,10 @@ namespace EmailValidation
 				if (text[index] >= 128 && !allowInternational)
 					return false;
 
-				if (text[index] == (byte) '\\') {
+				if (text[index] == '\\') {
 					escaped = !escaped;
 				} else if (!escaped) {
-					if (text[index] == (byte) '"')
+					if (text[index] == '"')
 						break;
 				} else {
 					escaped = false;
@@ -116,7 +116,7 @@ namespace EmailValidation
 				index++;
 			}
 
-			if (index >= text.Length || text[index] != (byte) '"')
+			if (index >= text.Length || text[index] != '"')
 				return false;
 
 			index++;
@@ -126,7 +126,7 @@ namespace EmailValidation
 
 		static bool SkipWord (string text, ref int index, bool allowInternational)
 		{
-			if (text[index] == (byte) '"')
+			if (text[index] == '"')
 				return SkipQuoted (text, ref index, allowInternational);
 
 			return SkipAtom (text, ref index, allowInternational);
