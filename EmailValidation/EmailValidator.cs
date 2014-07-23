@@ -44,7 +44,7 @@ namespace EmailValidation
 
 		static bool IsAtom (char c, bool allowInternational)
 		{
-			return c < 128 ? IsLetterOrDigit (c) || AtomCharacters.IndexOf (c) != -1 : allowInternational;
+			return c < 128 ? IsLetterOrDigit (c) || AtomCharacters.IndexOf (c) != -1 : allowInternational && !char.IsControl (c);
 		}
 
 		static bool IsDomain (char c)
