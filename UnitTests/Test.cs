@@ -32,7 +32,7 @@ namespace UnitTests
 	[TestFixture]
 	public class Test
 	{
-		static readonly string[] ValidAddresses = new string[] {
+		static readonly string[] ValidAddresses = {
 			"\"Abc\\@def\"@example.com",
 			"\"Fred Bloggs\"@example.com",
 			"\"Joe\\\\Blow\"@example.com",
@@ -63,7 +63,7 @@ namespace UnitTests
 			"\" \"@example.org"
 		};
 
-		static readonly string[] InvalidAddresses = new string[] {
+		static readonly string[] InvalidAddresses = {
 			"",
 			"invalid",
 			"invalid@",
@@ -83,6 +83,13 @@ namespace UnitTests
 			"this\\ still\\\"not\\\\allowed@example.com"
 		};
 
+		static readonly string[] ValidInternationalAddresses = {
+			"伊昭傑@郵件.商務",    // Chinese
+			"राम@मोहन.ईन्फो",       // Hindu
+			"юзер@екзампл.ком", // Ukranian
+			"θσερ@εχαμπλε.ψομ", // Greek
+		};
+
 		[Test]
 		public void TestValidAddresses ()
 		{
@@ -95,6 +102,13 @@ namespace UnitTests
 		{
 			for (int i = 0; i < InvalidAddresses.Length; i++)
 				Assert.IsFalse (EmailValidator.Validate (InvalidAddresses[i]), "Invalid Address #{0}", i);
+		}
+
+		[Test]
+		public void TestValidInternationalAddresses ()
+		{
+			for (int i = 0; i < ValidInternationalAddresses.Length; i++)
+				Assert.IsTrue (EmailValidator.Validate (ValidInternationalAddresses[i], true), "Valid International Address #{0}", i);
 		}
 	}
 }

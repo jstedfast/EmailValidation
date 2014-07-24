@@ -47,9 +47,9 @@ namespace EmailValidation
 			return c < 128 ? IsLetterOrDigit (c) || AtomCharacters.IndexOf (c) != -1 : allowInternational;
 		}
 
-		static bool IsDomain (char c)
+		static bool IsDomain (char c, bool allowInternational)
 		{
-			return IsLetterOrDigit (c) || c == '-';
+			return c < 128 ? IsLetterOrDigit (c) || c == '-' : allowInternational;
 		}
 
 		static bool SkipAtom (string text, ref int index, bool allowInternational)
@@ -62,22 +62,22 @@ namespace EmailValidation
 			return index > startIndex;
 		}
 
-		static bool SkipSubDomain (string text, ref int index)
+		static bool SkipSubDomain (string text, ref int index, bool allowInternational)
 		{
-			if (!IsDomain (text[index]) || text[index] == '-')
+			if (!IsDomain (text[index], allowInternational) || text[index] == '-')
 				return false;
 
 			index++;
 
-			while (index < text.Length && IsDomain (text[index]))
+			while (index < text.Length && IsDomain (text[index], allowInternational))
 				index++;
 
 			return true;
 		}
 
-		static bool SkipDomain (string text, ref int index)
+		static bool SkipDomain (string text, ref int index, bool allowInternational)
 		{
-			if (!SkipSubDomain (text, ref index))
+			if (!SkipSubDomain (text, ref index, allowInternational))
 				return false;
 
 			while (index < text.Length && text[index] == '.') {
@@ -86,7 +86,7 @@ namespace EmailValidation
 				if (index == text.Length)
 					return false;
 
-				if (!SkipSubDomain (text, ref index))
+				if (!SkipSubDomain (text, ref index, allowInternational))
 					return false;
 			}
 
@@ -275,7 +275,7 @@ namespace EmailValidation
 
 			if (email[index] != '[') {
 				// domain
-				if (!SkipDomain (email, ref index))
+				if (!SkipDomain (email, ref index, allowInternational))
 					return false;
 
 				return index == email.Length;
