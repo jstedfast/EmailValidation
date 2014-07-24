@@ -85,7 +85,7 @@ namespace UnitTests
 
 		static readonly string[] ValidInternationalAddresses = {
 			"伊昭傑@郵件.商務",    // Chinese
-			"राम@मोहन.ईन्फो",       // Hindu
+			"राम@मोहन.ईन्फो",       // Hindi
 			"юзер@екзампл.ком", // Ukranian
 			"θσερ@εχαμπλε.ψομ", // Greek
 		};
