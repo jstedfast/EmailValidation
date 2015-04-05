@@ -80,7 +80,11 @@ namespace UnitTests
 			"a\"b(c)d,e:f;g<h>i[j\\k]l@example.com",
 			"just\"not\"right@example.com",
 			"this is\"not\\allowed@example.com",
-			"this\\ still\\\"not\\\\allowed@example.com"
+			"this\\ still\\\"not\\\\allowed@example.com",
+
+			// example of real (invalid) input from real users. This
+			// specifically used to cause an IndexOutOfRangeException.
+			"Moved."
 		};
 
 		static readonly string[] ValidInternationalAddresses = {
