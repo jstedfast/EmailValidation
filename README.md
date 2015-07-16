@@ -7,4 +7,7 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
 
 ### Other Implementations:
 
-If you need an implementation in something other than C#, perhaps Pavel Azanov's [javascript port](https://github.com/azanov/emailValidator) will be helpful.
+If you need an implementation in something other than C#, perhaps one of the following ports will be helpful:
+
+- [javascript](https://github.com/azanov/emailValidator) by Pavel Azanov
+- [pascal](https://github.com/Xor-el/EmailValidationPascal) by Ugochukwu Mmaduekwe
