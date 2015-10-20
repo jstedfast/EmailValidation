@@ -259,7 +259,7 @@ namespace EmailValidation
 			if (email == null)
 				throw new ArgumentNullException ("email");
 
-			if (email.Length == 0)
+			if (email.Length == 0 || email.Length >= 255)
 				return false;
 
 			if (!SkipWord (email, ref index, allowInternational) || index >= email.Length)
