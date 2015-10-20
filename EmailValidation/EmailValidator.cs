@@ -72,7 +72,7 @@ namespace EmailValidation
 			while (index < text.Length && IsDomain (text[index], allowInternational))
 				index++;
 
-			return true;
+			return text[index - 1] != '-';
 		}
 
 		static bool SkipDomain (string text, ref int index, bool allowInternational)
