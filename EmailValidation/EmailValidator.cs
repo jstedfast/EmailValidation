@@ -64,6 +64,8 @@ namespace EmailValidation
 
 		static bool SkipSubDomain (string text, ref int index, bool allowInternational)
 		{
+			int startIndex = index;
+
 			if (!IsDomain (text[index], allowInternational) || text[index] == '-')
 				return false;
 
@@ -72,7 +74,7 @@ namespace EmailValidation
 			while (index < text.Length && IsDomain (text[index], allowInternational))
 				index++;
 
-			return text[index - 1] != '-';
+			return (index - startIndex) < 64 && text[index - 1] != '-';
 		}
 
 		static bool SkipDomain (string text, ref int index, bool allowInternational)
