@@ -278,7 +278,7 @@ namespace EmailValidation
 					return false;
 			}
 
-			if (index + 1 >= email.Length || email[index++] != '@')
+			if (index + 1 >= email.Length || index > 64 || email[index++] != '@')
 				return false;
 
 			if (email[index] != '[') {
