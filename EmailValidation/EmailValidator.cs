@@ -200,7 +200,7 @@ namespace EmailValidation
 					if (!SkipIPv4Literal (text, ref index))
 						return false;
 
-					break;
+					return compact ? colons < 6 : colons == 6;
 				}
 
 				int count = index - startIndex;
@@ -232,10 +232,7 @@ namespace EmailValidation
 			if (colons < 2)
 				return false;
 
-			if (compact)
-				return colons < 6;
-
-			return colons < 7;
+			return compact ? colons < 7 : colons == 7;
 		}
 
 		/// <summary>
