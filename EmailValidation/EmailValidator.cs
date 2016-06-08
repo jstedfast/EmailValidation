@@ -77,19 +77,23 @@ namespace EmailValidation
 			return (index - startIndex) < 64 && text[index - 1] != '-';
 		}
 
-		static bool SkipDomain (string text, ref int index, bool allowInternational)
+		static bool SkipDomain (string text, ref int index, bool allowTopLevelDomains, bool allowInternational)
 		{
 			if (!SkipSubDomain (text, ref index, allowInternational))
 				return false;
 
-			while (index < text.Length && text[index] == '.') {
-				index++;
+			if (index < text.Length && text[index] == '.') {
+				do {
+					index++;
 
-				if (index == text.Length)
-					return false;
+					if (index == text.Length)
+						return false;
 
-				if (!SkipSubDomain (text, ref index, allowInternational))
-					return false;
+					if (!SkipSubDomain (text, ref index, allowInternational))
+						return false;
+				} while (index < text.Length && text[index] == '.');
+			} else if (!allowTopLevelDomains) {
+				return false;
 			}
 
 			return true;
@@ -245,11 +249,12 @@ namespace EmailValidation
 		/// </remarks>
 		/// <returns><c>true</c> if the email address is valid; otherwise <c>false</c>.</returns>
 		/// <param name="email">An email address.</param>
+		/// <param name="allowTopLevelDomains"><value>true</value> if the validator should allow addresses at top-level domains; otherwise, <value>false</value>.</param>
 		/// <param name="allowInternational"><value>true</value> if the validator should allow international characters; otherwise, <value>false</value>.</param>
 		/// <exception cref="System.ArgumentNullException">
 		/// <paramref name="email"/> is <c>null</c>.
 		/// </exception>
-		public static bool Validate (string email, bool allowInternational = false)
+		public static bool Validate (string email, bool allowTopLevelDomains = false, bool allowInternational = false)
 		{
 			int index = 0;
 
@@ -280,7 +285,7 @@ namespace EmailValidation
 
 			if (email[index] != '[') {
 				// domain
-				if (!SkipDomain (email, ref index, allowInternational))
+				if (!SkipDomain (email, ref index, allowTopLevelDomains, allowInternational))
 					return false;
 
 				return index == email.Length;

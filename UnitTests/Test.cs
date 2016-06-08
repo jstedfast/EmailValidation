@@ -151,21 +151,21 @@ namespace UnitTests
 		public void TestValidAddresses ()
 		{
 			for (int i = 0; i < ValidAddresses.Length; i++)
-				Assert.IsTrue (EmailValidator.Validate (ValidAddresses[i]), "Valid Address #{0}: {1}", i, ValidAddresses[i]);
+				Assert.IsTrue (EmailValidator.Validate (ValidAddresses[i], true), "Valid Address #{0}: {1}", i, ValidAddresses[i]);
 		}
 
 		[Test]
 		public void TestInvalidAddresses ()
 		{
 			for (int i = 0; i < InvalidAddresses.Length; i++)
-				Assert.IsFalse (EmailValidator.Validate (InvalidAddresses[i]), "Invalid Address #{0}: {1}", i, InvalidAddresses[i]);
+				Assert.IsFalse (EmailValidator.Validate (InvalidAddresses[i], true), "Invalid Address #{0}: {1}", i, InvalidAddresses[i]);
 		}
 
 		[Test]
 		public void TestValidInternationalAddresses ()
 		{
 			for (int i = 0; i < ValidInternationalAddresses.Length; i++)
-				Assert.IsTrue (EmailValidator.Validate (ValidInternationalAddresses[i], true), "Valid International Address #{0}", i);
+				Assert.IsTrue (EmailValidator.Validate (ValidInternationalAddresses[i], true, true), "Valid International Address #{0}", i);
 		}
 	}
 }
