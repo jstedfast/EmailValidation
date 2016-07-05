@@ -3,3 +3,6 @@ EmailValidation.suo
 bin
 obj
 *~
+
+# We don't want to pick up the packages restored by nuget
+packages
