@@ -9,5 +9,5 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
 
 If you need an implementation in something other than C#, perhaps one of the following ports will be helpful:
 
-- [javascript](https://github.com/azanov/emailValidator) by Pavel Azanov
+- [javascript](https://github.com/azanov/isMailFine) by Pavel Azanov
 - [pascal](https://github.com/Xor-el/EmailValidationPascal) by Ugochukwu Mmaduekwe
