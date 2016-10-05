@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata>
+		<id>EmailValidation</id>
+		<version>1.0.0</version>
+		<title>EmailValidation</title>
+		<authors>Jeffrey Stedfast</authors>
+		<owners>Jeffrey Stedfast</owners>
+		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+		<projectUrl>http://github.com/jstedfast/EmailValidation</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>A simple (but correct) .NET class for validating email addresses.
+
+Supports mail addresses as defined in rfc5322 as well as the new Internationalized Mail Address standards (rfc653x).</description>
+		<summary>A simple (but correct) .NET class for validating email addresses.</summary>
+		<releaseNotes></releaseNotes>
+		<copyright>Jeffrey Stedfast</copyright>
+		<language>en-US</language>
+		<tags>email validation</tags>
+		<frameworkAssemblies>
+		</frameworkAssemblies>
+	<dependencies>
+	</dependencies>
+	</metadata>
+	<files>
+		<file src="EmailValidation\bin\Release\EmailValidation.dll" target="lib\portable-net40+sl5+win8+wp8\EmailValidation.dll" />
+	</files>
+</package>
