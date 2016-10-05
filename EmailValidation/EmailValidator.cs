@@ -3,7 +3,7 @@
 //
 // Author: Jeffrey Stedfast <jeff@xamarin.com>
 //
-// Copyright (c) 2013 Xamarin Inc.
+// Copyright (c) 2013-2016 Xamarin Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -244,13 +244,15 @@ namespace EmailValidation
 		/// </summary>
 		/// <remarks>
 		/// <para>Validates the syntax of an email address.</para>
-		/// <para>If <paramref name="allowInternational"/> is <value>true</value>, then the validator
+		/// <para>If <paramref name="allowTopLevelDomains"/> is <c>true</c>, then the validator will
+		/// allow addresses with top-level domains like <c>postmaster@dk</c>.</para>
+		/// <para>If <paramref name="allowInternational"/> is <c>true</c>, then the validator
 		/// will use the newer International Email standards for validating the email address.</para>
 		/// </remarks>
-		/// <returns><c>true</c> if the email address is valid; otherwise <c>false</c>.</returns>
+		/// <returns><c>true</c> if the email address is valid; otherwise, <c>false</c>.</returns>
 		/// <param name="email">An email address.</param>
-		/// <param name="allowTopLevelDomains"><value>true</value> if the validator should allow addresses at top-level domains; otherwise, <value>false</value>.</param>
-		/// <param name="allowInternational"><value>true</value> if the validator should allow international characters; otherwise, <value>false</value>.</param>
+		/// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+		/// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
 		/// <exception cref="System.ArgumentNullException">
 		/// <paramref name="email"/> is <c>null</c>.
 		/// </exception>
