@@ -48,6 +48,37 @@ build configuration and then build.
 
 Note: The **Release** build will generate the xml API documentation, but the **Debug** build will not.
 
+## Using EmailValidation
+
+This is quite possibly the easiest API ever to use. There is simply 1 class with 1 method.
+
+```csharp
+using System;
+
+using EmailValidation;
+
+namespace Example {
+    public class Program
+    {
+        public static void Main ()
+        {
+            do {
+                Console.Write ("Enter an email address: ");
+
+                var input = Console.ReadLine ();
+                if (input == null)
+                    break;
+
+                input = input.Trim ();
+                Console.WriteLine ("{0} is {1}!", input, EmailValidator.Validate (input) ? "valid" : "invalid");
+            } while (true);
+
+            Console.WriteLine ();
+        }
+    }
+}
+```
+
 ## License Information
 
 EmailValidation is Copyright (C) 2013-2016 Jeffrey Stedfast and is licensed under the MIT license:
