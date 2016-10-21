@@ -171,64 +171,64 @@ namespace UnitTests
 		}
 
 		[Test]
-		public void TestThrowsExceptionIfNull()
+		public void TestThrowsExceptionIfNull ()
 		{
-			Assert.Throws<ArgumentNullException>(() => EmailValidator.Validate(null, true, true), "Null Address");
+			Assert.Throws<ArgumentNullException> (() => EmailValidator.Validate (null, true, true), "Null Address");
 		}
 
 		[Test]
-		public void TestValidationAttributeValidAddresses()
+		public void TestValidationAttributeValidAddresses ()
 		{
-			EmailValidationTarget target = new EmailValidationTarget();
+			EmailValidationTarget target = new EmailValidationTarget ();
 
-			foreach (var email in ValidAddresses)
-			{
+			foreach (var email in ValidAddresses) {
 				target.Email = email;
-				Assert.IsTrue(AreAttributesValid(target), "Valid Address {0}", email);
+
+				Assert.IsTrue (AreAttributesValid (target), "Valid Address {0}", email);
 			}
 		}
 
 		[Test]
-		public void TestValidationAttributeInvalidAddresses()
+		public void TestValidationAttributeInvalidAddresses ()
 		{
-			EmailValidationTarget target = new EmailValidationTarget();
+			EmailValidationTarget target = new EmailValidationTarget ();
 
-			foreach (var email in InvalidAddresses)
-			{
+			foreach (var email in InvalidAddresses) {
 				target.Email = email;
-				Assert.IsFalse(AreAttributesValid(target), "Invalid Address {0}", email);
+
+				Assert.IsFalse (AreAttributesValid (target), "Invalid Address {0}", email);
 			}
 		}
 
 		[Test]
-		public void TestValidationAttributeValidInternationalAddresses()
+		public void TestValidationAttributeValidInternationalAddresses ()
 		{
-			var target = new InternationalEmailValidationTarget();
+			var target = new InternationalEmailValidationTarget ();
 
-			foreach (var email in ValidInternationalAddresses)
-			{
+			foreach (var email in ValidInternationalAddresses) {
 				target.Email = email;
-				Assert.IsTrue(AreAttributesValid(target), "Valid International Address {0}", email);
+
+				Assert.IsTrue (AreAttributesValid (target), "Valid International Address {0}", email);
 			}
 		}
 
-		private bool AreAttributesValid(object target)
+		bool AreAttributesValid (object target)
 		{
-			var context = new ValidationContext(target, null, null);
-			var results = new List<ValidationResult>();
+			var context = new ValidationContext (target, null, null);
+			var results = new List<ValidationResult> ();
 
-			return Validator.TryValidateObject(target, context, results, true);
+			return Validator.TryValidateObject (target, context, results, true);
 		}
 
-		private class EmailValidationTarget
+		class EmailValidationTarget
 		{
-			[Email(true)]
+			[Email (true)]
 			public string Email { get; set; }
 		}
 
-		private class InternationalEmailValidationTarget
+		class InternationalEmailValidationTarget
 		{
-			[Email(true, true)]
+			[Email (true, true)]
 			public string Email { get; set; }
 		}
 	}

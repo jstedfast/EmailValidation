@@ -28,10 +28,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EmailValidation
 {
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 	public sealed class EmailAttribute : ValidationAttribute
 	{
-		public EmailAttribute(bool allowTopLevelDomains = false, bool allowInternational = false)
+		public EmailAttribute (bool allowTopLevelDomains = false, bool allowInternational = false)
 		{
 			AllowTopLevelDomains = allowTopLevelDomains;
 			AllowInternational = allowInternational;
@@ -41,23 +41,17 @@ namespace EmailValidation
 
 		public bool AllowInternational { get; set; }
 
-		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
 		{
-			string[] memberNames = new string[] { validationContext.MemberName };
+			var memberNames = new string[] { validationContext.MemberName };
 
 			if (value == null)
-			{
-				return new ValidationResult("Email can't be null", memberNames);
-			}
+				return new ValidationResult ("Email can't be null", memberNames);
 
-			if (EmailValidator.Validate((string)value, AllowTopLevelDomains, AllowInternational))
-			{
+			if (EmailValidator.Validate ((string) value, AllowTopLevelDomains, AllowInternational))
 				return ValidationResult.Success;
-			}
-			else
-			{
-				return new ValidationResult("Email invalid", memberNames);
-			}
+
+			return new ValidationResult ("Email invalid", memberNames);
 		}
 	}
 }
