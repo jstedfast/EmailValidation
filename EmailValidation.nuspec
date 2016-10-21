@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>EmailValidation</id>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 		<title>EmailValidation</title>
 		<authors>Jeffrey Stedfast</authors>
 		<owners>Jeffrey Stedfast</owners>
@@ -24,5 +24,6 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
 	</metadata>
 	<files>
 		<file src="EmailValidation\bin\Release\EmailValidation.dll" target="lib\portable-net40+sl5+win8+wp8\EmailValidation.dll" />
+		<file src="EmailValidation\bin\Release\EmailValidation.xml" target="lib\portable-net40+sl5+win8+wp8\EmailValidation.xml" />
 	</files>
 </package>
