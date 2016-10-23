@@ -20,6 +20,9 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
 		<frameworkAssemblies>
 		</frameworkAssemblies>
 	<dependencies>
+                <group targetFramework="portable-net40+sl5+win8+wp8">
+                        <dependency id="Portable.DataAnnotations" version="1.0.0" />
+                </group>
 	</dependencies>
 	</metadata>
 	<files>
