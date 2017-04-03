@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailValidation", "EmailValidation\EmailValidation.csproj", "{B03674D1-65A4-4A79-AAD1-0EA9781A3ED7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailValidation.Net40", "EmailValidation\EmailValidation.Net40.csproj", "{256AF129-ED9B-4F32-A732-A72E15D6A5B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailValidation.Net45", "EmailValidation\EmailValidation.Net45.csproj", "{ECB4DCA2-75BB-49E3-87D9-5FD043BC165A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailValidation.NetStandard", "EmailValidation\EmailValidation.NetStandard.csproj", "{397D400F-E254-4960-9B1F-438FFD39B8DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{31A3445A-98CD-4E01-AF72-E4A05B1E3D82}"
 EndProject
@@ -11,16 +15,24 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{256AF129-ED9B-4F32-A732-A72E15D6A5B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{256AF129-ED9B-4F32-A732-A72E15D6A5B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{256AF129-ED9B-4F32-A732-A72E15D6A5B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{256AF129-ED9B-4F32-A732-A72E15D6A5B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECB4DCA2-75BB-49E3-87D9-5FD043BC165A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB4DCA2-75BB-49E3-87D9-5FD043BC165A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB4DCA2-75BB-49E3-87D9-5FD043BC165A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB4DCA2-75BB-49E3-87D9-5FD043BC165A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{397D400F-E254-4960-9B1F-438FFD39B8DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397D400F-E254-4960-9B1F-438FFD39B8DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397D400F-E254-4960-9B1F-438FFD39B8DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{397D400F-E254-4960-9B1F-438FFD39B8DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{31A3445A-98CD-4E01-AF72-E4A05B1E3D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31A3445A-98CD-4E01-AF72-E4A05B1E3D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31A3445A-98CD-4E01-AF72-E4A05B1E3D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31A3445A-98CD-4E01-AF72-E4A05B1E3D82}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B03674D1-65A4-4A79-AAD1-0EA9781A3ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B03674D1-65A4-4A79-AAD1-0EA9781A3ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B03674D1-65A4-4A79-AAD1-0EA9781A3ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B03674D1-65A4-4A79-AAD1-0EA9781A3ED7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = EmailValidation\EmailValidation.csproj
+		StartupItem = EmailValidation\EmailValidation.Net45.csproj
 	EndGlobalSection
 EndGlobal
