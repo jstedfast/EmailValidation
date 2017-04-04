@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>EmailValidation</id>
-		<version>1.0.2</version>
+		<version>1.0.3</version>
 		<title>EmailValidation</title>
 		<authors>Jeffrey Stedfast</authors>
 		<owners>Jeffrey Stedfast</owners>
@@ -21,19 +21,19 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
 		</frameworkAssemblies>
 		<dependencies>
 			<group targetFramework="net40" />
-      <group targetFramework="net45" />
-      <group targetFramework=".NETStandard1.1">
-        <dependency id="NETStandard.Library" version="1.6.1" />
-        <dependency id="System.ComponentModel.Annotations" version="4.3.0" />
-      </group>
+			<group targetFramework="net45" />
+			<group targetFramework=".NETStandard1.1">
+				<dependency id="NETStandard.Library" version="1.6.1" />
+				<dependency id="System.ComponentModel.Annotations" version="4.3.0" />
+			</group>
 		</dependencies>
 	</metadata>
 	<files>
 		<file src="EmailValidation\bin\Release\net40\EmailValidation.dll" target="lib\net40\EmailValidation.dll" />
 		<file src="EmailValidation\bin\Release\net40\EmailValidation.xml" target="lib\net40\EmailValidation.xml" />
-    <file src="EmailValidation\bin\Release\net45\EmailValidation.dll" target="lib\net45\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\net45\EmailValidation.xml" target="lib\net45\EmailValidation.xml" />
-    <file src="EmailValidation\bin\Release\netstandard1.1\EmailValidation.dll" target="lib\netstandard1.1\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\netstandard1.1\EmailValidation.xml" target="lib\netstandard1.1\EmailValidation.xml" />
+		<file src="EmailValidation\bin\Release\net45\EmailValidation.dll" target="lib\net45\EmailValidation.dll" />
+		<file src="EmailValidation\bin\Release\net45\EmailValidation.xml" target="lib\net45\EmailValidation.xml" />
+		<file src="EmailValidation\bin\Release\netstandard1.1\EmailValidation.dll" target="lib\netstandard1.1\EmailValidation.dll" />
+		<file src="EmailValidation\bin\Release\netstandard1.1\EmailValidation.xml" target="lib\netstandard1.1\EmailValidation.xml" />
 	</files>
 </package>
