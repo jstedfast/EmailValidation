@@ -332,9 +332,9 @@ namespace EmailValidation
 			// Local-part = Dot-string / Quoted-string
 			//       ; MAY be case-sensitive
 			//
-			// Dot-string = Atom * ("." Atom)
+			// Dot-string = Atom *("." Atom)
 			//
-			// Quoted-string = DQUOTE * qcontent DQUOTE
+			// Quoted-string = DQUOTE *qcontent DQUOTE
 			if (email[index] == '"') {
 				if (!SkipQuoted (email, ref index, allowInternational) || index >= email.Length)
 					return false;
