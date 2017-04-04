@@ -163,8 +163,8 @@ namespace EmailValidation
 				return false;
 			}
 
-			// top-level domains are all alphabetic-only
-			if (type != SubDomainType.Alphabetic)
+			// Note: by allowing AlphaNumeric, we get away with not having to support punycode.
+			if (type == SubDomainType.Numeric)
 				return false;
 
 			return true;
