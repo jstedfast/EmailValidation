@@ -163,7 +163,8 @@ namespace EmailValidation
 				return false;
 			}
 
-			if (type == SubDomainType.Numeric)
+			// top-level domains are all alphabetic-only
+			if (type != SubDomainType.Alphabetic)
 				return false;
 
 			return true;
