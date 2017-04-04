@@ -201,14 +201,6 @@ namespace EmailValidation
 			return true;
 		}
 
-		static bool SkipWord (string text, ref int index, bool allowInternational)
-		{
-			if (text[index] == '"')
-				return SkipQuoted (text, ref index, allowInternational);
-
-			return SkipAtom (text, ref index, allowInternational);
-		}
-
 		static bool SkipIPv4Literal (string text, ref int index)
 		{
 			int groups = 0;
@@ -337,20 +329,31 @@ namespace EmailValidation
 			if (email.Length == 0 || email.Length >= 255)
 				return false;
 
-			if (!SkipWord (email, ref index, allowInternational) || index >= email.Length)
-				return false;
-
-			while (email[index] == '.') {
-				index++;
-
-				if (index >= email.Length)
+			// Local-part = Dot-string / Quoted-string
+			//       ; MAY be case-sensitive
+			//
+			// Dot-string = Atom * ("." Atom)
+			//
+			// Quoted-string = DQUOTE * qcontent DQUOTE
+			if (email[index] == '"') {
+				if (!SkipQuoted (email, ref index, allowInternational) || index >= email.Length)
+					return false;
+			} else {
+				if (!SkipAtom (email, ref index, allowInternational) || index >= email.Length)
 					return false;
 
-				if (!SkipWord (email, ref index, allowInternational))
-					return false;
+				while (email[index] == '.') {
+					index++;
 
-				if (index >= email.Length)
-					return false;
+					if (index >= email.Length)
+						return false;
+
+					if (!SkipAtom (email, ref index, allowInternational))
+						return false;
+
+					if (index >= email.Length)
+						return false;
+				}
 			}
 
 			if (index + 1 >= email.Length || index > 64 || email[index++] != '@')
