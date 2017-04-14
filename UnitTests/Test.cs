@@ -29,6 +29,8 @@ using EmailValidation;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
+[assembly: System.Reflection.AssemblyVersionAttribute("4.4.4.1")]
+
 namespace UnitTests
 {
 	[TestFixture]
