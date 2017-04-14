@@ -5,3 +5,6 @@ bin
 obj
 *.project.lock.json
 *~
+
+# We don't want to pick up the packages restored by nuget
+packages
