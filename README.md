@@ -79,6 +79,9 @@ namespace Example {
 }
 ```
 
+
+
+
 ## License Information
 
 EmailValidation is Copyright (C) 2013-2016 Jeffrey Stedfast and is licensed under the MIT license:
