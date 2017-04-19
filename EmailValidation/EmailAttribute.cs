@@ -31,13 +31,24 @@ namespace EmailValidation
 	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 	public sealed class EmailAttribute : ValidationAttribute
 	{
-		public EmailAttribute (bool allowTopLevelDomains = false, bool allowInternational = false)
+		public EmailAttribute (bool allowTopLevelDomains , bool allowInternational)
 		{
 			AllowTopLevelDomains = allowTopLevelDomains;
 			AllowInternational = allowInternational;
 		}
+        public EmailAttribute()
+        {
+            AllowTopLevelDomains = false;
+            AllowInternational = false;
+        }
+        public EmailAttribute(bool allowTopLevelDomains)
+        {
+            AllowTopLevelDomains = allowTopLevelDomains;
+            AllowTopLevelDomains = false;
+        }
 
-		public bool AllowTopLevelDomains { get; set; }
+
+        public bool AllowTopLevelDomains { get; set; }
 
 		public bool AllowInternational { get; set; }
 
