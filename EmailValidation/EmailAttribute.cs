@@ -48,9 +48,9 @@ namespace EmailValidation
         }
 
 
-        public bool AllowTopLevelDomains { get; set; }
+        public bool AllowTopLevelDomains { get;  }
 
-		public bool AllowInternational { get; set; }
+		public bool AllowInternational { get;  }
 
 		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
 		{
