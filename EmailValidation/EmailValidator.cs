@@ -301,8 +301,7 @@ namespace EmailValidation
 				return false;
 
 			var ipv6 = email.Substring (index, 5);
-            
-			if (ipv6.ToUpperInvariant () == "ipv6:") {
+			if (ipv6.ToUpperInvariant () == "IPV6:") {
 				index += "IPv6:".Length;
 				if (!SkipIPv6Literal (email, ref index))
 					return false;
