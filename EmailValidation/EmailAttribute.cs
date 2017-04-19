@@ -28,30 +28,58 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EmailValidation
 {
+    /// <summary>
+    /// This valides email addresses depends on the attributes we gave it in the constructor.
+    /// </summary>
 	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 	public sealed class EmailAttribute : ValidationAttribute
 	{
+        /// <summary>
+        /// Constructor for EmailAttribute
+        /// </summary>
+        /// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+        /// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
 		public EmailAttribute (bool allowTopLevelDomains , bool allowInternational)
 		{
 			AllowTopLevelDomains = allowTopLevelDomains;
 			AllowInternational = allowInternational;
 		}
+
+        /// <summary>
+        /// Constructor with default false value for both AllowTopLevelDomains and AllowInternational attributes
+        /// </summary>
         public EmailAttribute()
         {
             AllowTopLevelDomains = false;
             AllowInternational = false;
         }
+
+        /// <summary>
+        /// Constructor with default false value for AllowInternational
+        /// </summary>
+        /// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
         public EmailAttribute(bool allowTopLevelDomains)
         {
             AllowTopLevelDomains = allowTopLevelDomains;
-            AllowTopLevelDomains = false;
+            AllowInternational = false;
         }
 
-
+        /// <summary>
+        /// Getter for AllowTopLevelDomains
+        /// </summary>
         public bool AllowTopLevelDomains { get;  }
 
+        /// <summary>
+        /// Getter for AllowInternational
+        /// </summary>
 		public bool AllowInternational { get;  }
 
+        /// <summary>
+        /// If everything is ok runs the Validate function
+        /// </summary>
+        /// <param name="value">An email address.</param>
+        /// <param name="validationContext">A validation context.</param>
+        /// <returns></returns>
 		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
 		{
             if (validationContext == null)

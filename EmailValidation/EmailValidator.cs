@@ -315,10 +315,23 @@ namespace EmailValidation
 
 			return index == email.Length;
 		}
+
+        /// <summary>
+        /// Validate the specified email address, without allowing any international characters.
+        /// </summary>
+        /// <param name="email">An email address.</param>
+        /// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+        /// <returns></returns>
         public static bool Validate(string email , bool allowTopLevelDomains )
         {
             return Validate(email, allowTopLevelDomains, false);
         }
+
+        /// <summary>
+        /// Validate the specified email address, without allowing any international characters, and without allowing addresses at top-level domains.
+        /// </summary>
+        /// <param name="email">An email address.</param>
+        /// <returns></returns>
         public static bool Validate(string email)
         {
             return Validate(email, false, false);
