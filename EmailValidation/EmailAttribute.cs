@@ -54,6 +54,8 @@ namespace EmailValidation
 
 		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
 		{
+            if (validationContext == null)
+                throw new ArgumentNullException("validationContext");
 			var memberNames = new string[] { validationContext.MemberName };
 
 			if (value == null)
