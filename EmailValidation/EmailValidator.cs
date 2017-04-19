@@ -256,11 +256,11 @@ namespace EmailValidation
 		/// <exception cref="System.ArgumentNullException">
 		/// <paramref name="email"/> is <c>null</c>.
 		/// </exception>
-		public static bool Validate (string email, bool allowTopLevelDomains = false, bool allowInternational = false)
+		public static bool Validate (string email = "", bool allowTopLevelDomains = false, bool allowInternational = false)
 		{
 			int index = 0;
-
-			if (email == null)
+            
+			if (string.IsNullOrEmpty(email))
 				throw new ArgumentNullException ("email");
 
 			if (email.Length == 0 || email.Length >= 255)
@@ -301,7 +301,8 @@ namespace EmailValidation
 				return false;
 
 			var ipv6 = email.Substring (index, 5);
-			if (ipv6.ToLowerInvariant () == "ipv6:") {
+            
+			if (ipv6.ToUpperInvariant () == "ipv6:") {
 				index += "IPv6:".Length;
 				if (!SkipIPv6Literal (email, ref index))
 					return false;
