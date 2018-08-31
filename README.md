@@ -108,3 +108,4 @@ If you need an implementation in something other than C#, perhaps one of the fol
 - [javascript](https://github.com/azanov/isMailFine) by Pavel Azanov
 - [pascal](https://github.com/Xor-el/EmailValidationPascal) by Ugochukwu Mmaduekwe
 - [Swift](https://github.com/evanrobertson/EmailValidator) by Evan Robertson
+- [Dart](https://github.com/fredeil/email-validator.dart) by Fredrik Eilertsen
