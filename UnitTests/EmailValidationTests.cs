@@ -187,7 +187,7 @@ namespace UnitTests
 		}
 
 		[Test]
-		public void TestThrowsExceptionIfNull ()
+		public void TestArgumentNullException ()
 		{
 			Assert.Throws<ArgumentNullException> (() => EmailValidator.Validate (null, true, true), "Null Address");
 		}
