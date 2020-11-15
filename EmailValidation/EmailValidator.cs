@@ -139,7 +139,11 @@ namespace EmailValidation
 			while (index < text.Length && IsDomain (text[index], allowInternational, ref type))
 				index++;
 
-			return (index - startIndex) < 64 && text[index - 1] != '-';
+			// Don't allow single-character top-level domains.
+			if (index == text.Length && (index - startIndex) == 1)
+				return false;
+
+			return (index - startIndex) <= 64 && text[index - 1] != '-';
 		}
 
 		static bool SkipDomain (string text, ref int index, bool allowTopLevelDomains, bool allowInternational)
@@ -326,7 +330,7 @@ namespace EmailValidation
 			if (email == null)
 				throw new ArgumentNullException (nameof (email));
 
-			if (email.Length == 0 || email.Length >= 255)
+			if (email.Length == 0 || email.Length > 256)
 				return false;
 
 			// Local-part = Dot-string / Quoted-string

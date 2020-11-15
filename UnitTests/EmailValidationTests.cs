@@ -53,7 +53,7 @@ namespace UnitTests
 			"valid.ipv6v4.addr@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:127.0.0.1]",
 			new string ('a', 63) + "@example.com", // max local-part length (63 characters)
 			"valid@" + new string ('a', 63) + ".com", // max subdomain length (63 characters)
-			"valid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 61) + ".com", // max length (254 characters)
+			"valid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 63) + ".com", // max length (256 characters)
 
 			// examples from wikipedia
 			"niceandsimple@example.com",
@@ -94,7 +94,7 @@ namespace UnitTests
 			"punycode-numbers-in-tld@sld.xn--3e0b707e",
 			"single-character-in-sld@x.org",
 			"the-character-limit@for-each-part.of-the-domain.is-sixty-three-characters.this-is-exactly-sixty-three-characters-so-it-is-valid-blah-blah.com",
-			"the-total-length@of-an-entire-address.cannot-be-longer-than-two-hundred-and-fifty-four-characters.and-this-address-is-254-characters-exactly.so-it-should-be-valid.and-im-going-to-add-some-more-words-here.to-increase-the-length-blah-blah-blah-blah-bla.org",
+			"the-total-length@of-an-entire-address.cannot-be-longer-than-two-hundred-and-fifty-six-characters.and-this-address-is-256-characters-exactly.so-it-should-be-valid.and-im-going-to-add-some-more-words-here.to-increase-the-length-blah-blah-blah-blah-blah.org",
 			"uncommon-tld@sld.mobi",
 			"uncommon-tld@sld.museum",
 			"uncommon-tld@sld.travel",
@@ -110,9 +110,9 @@ namespace UnitTests
 			"invalid@[127.0.0.1.]",
 			"invalid@[127.0.0.1].",
 			"invalid@[127.0.0.1]x",
-			new string ('a', 64) + "@example.com", // local-part too long
-			"invalid@" + new string ('a', 64) + ".com", // subdomain too long
-			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 60) + ".com", // too long (255 characters)
+			new string ('a', 65) + "@example.com", // local-part too long
+			"invalid@" + new string ('a', 65) + ".com", // subdomain too long
+			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 62) + ".com", // too long (256 characters)
 
 			// examples from wikipedia
 			"Abc.example.com",
@@ -139,11 +139,13 @@ namespace UnitTests
 			"missing-tld@sld.",
 			"sld-ends-with-dash@sld-.com",
 			"sld-starts-with-dashsh@-sld.com",
-			"the-character-limit@for-each-part.of-the-domain.is-sixty-three-characters.this-is-exactly-sixty-four-characters-so-it-is-invalid-blah-blah.com",
+			"the-character-limit@for-each-part.of-the-domain.is-sixty-four-characters.this-subdomain-is-exactly-sixty-five-characters-so-it-is-invalid1.com",
 			"the-local-part-is-invalid-if-it-is-longer-than-sixty-four-characters@sld.net",
-			"the-total-length@of-an-entire-address.cannot-be-longer-than-two-hundred-and-fifty-four-characters.and-this-address-is-255-characters-exactly.so-it-should-be-invalid.and-im-going-to-add-some-more-words-here.to-increase-the-lenght-blah-blah-blah-blah-bl.org",
+			"the-total-length@of-an-entire-address.cannot-be-longer-than-two-hundred-and-fifty-six-characters.and-this-address-is-257-characters-exactly.so-it-should-be-invalid.lets-add-some-extra-words-here.to-increase-the-length.beyond-the-256-character-limitation.org",
 			"two..consecutive-dots@sld.com",
 			"unbracketed-IP@127.0.0.1",
+			"dot-first-in-domain@.test.de",
+			"single-character-tld@ns.i",
 
 			// examples of real (invalid) input from real users.
 			"No longer available.",
