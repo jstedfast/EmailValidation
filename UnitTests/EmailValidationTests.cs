@@ -110,9 +110,18 @@ namespace UnitTests
 			"invalid@[127.0.0.1.]",
 			"invalid@[127.0.0.1].",
 			"invalid@[127.0.0.1]x",
+			"\"locál-part\"@example.com", // international local-part when allowInternational=false should fail
 			new string ('a', 65) + "@example.com", // local-part too long
 			"invalid@" + new string ('a', 65) + ".com", // subdomain too long
 			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 62) + ".com", // too long (256 characters)
+			"invalid@[]", // empty IP literal
+			"invalid@[111.111.111.111", // unenclosed IPv4 literal
+			"invalid@[IPv6:2607:f0d0:1002:51::4", // unenclosed IPv6 literal
+			"invalid@[IPv6:1111::1111::1111]", // invalid IPv6-comp
+			"invalid@[IPv6:1111:::1111::1111]", // more than 2 consecutive :'s in IPv6
+			"invalid@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:555.666.777.888]", // invalid IPv4 address in IPv6v4
+			"invalid@[IPv6:1111:1111]", // incomplete IPv6
+			"\"invalid-qstring@example.com", // unterminated q-string in local-part of the addr-spec
 
 			// examples from wikipedia
 			"Abc.example.com",
@@ -226,6 +235,16 @@ namespace UnitTests
 
 				Assert.IsTrue (AreAttributesValid (target), "Valid International Address {0}", email);
 			}
+		}
+
+		[Test]
+		public void TestValidationAttributeNullEmail ()
+		{
+			var target = new EmailValidationTarget () {
+				Email = null
+			};
+
+			Assert.IsFalse (AreAttributesValid (target), "Email can't be null {0}", "");
 		}
 
 		bool AreAttributesValid (object target)
