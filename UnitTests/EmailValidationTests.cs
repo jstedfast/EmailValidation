@@ -51,6 +51,9 @@ namespace UnitTests
 			"valid.ipv6.addr@[IPv6:fe80::230:48ff:fe33:bc33]",
 			"valid.ipv6.addr@[IPv6:fe80:0000:0000:0000:0202:b3ff:fe1e:8329]",
 			"valid.ipv6v4.addr@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:127.0.0.1]",
+			new string ('a', 63) + "@example.com", // max local-part length (63 characters)
+			"valid@" + new string ('a', 63) + ".com", // max subdomain length (63 characters)
+			"valid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 61) + ".com", // max length (254 characters)
 
 			// examples from wikipedia
 			"niceandsimple@example.com",
@@ -98,7 +101,7 @@ namespace UnitTests
 		};
 
 		static readonly string[] InvalidAddresses = {
-			"",
+			string.Empty,
 			"invalid",
 			"invalid@",
 			"invalid @",
@@ -107,6 +110,9 @@ namespace UnitTests
 			"invalid@[127.0.0.1.]",
 			"invalid@[127.0.0.1].",
 			"invalid@[127.0.0.1]x",
+			new string ('a', 64) + "@example.com", // local-part too long
+			"invalid@" + new string ('a', 64) + ".com", // subdomain too long
+			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 60) + ".com", // too long (255 characters)
 
 			// examples from wikipedia
 			"Abc.example.com",
@@ -145,8 +151,8 @@ namespace UnitTests
 		};
 
 		static readonly string[] ValidInternationalAddresses = {
-			"伊昭傑@郵件.商務",    // Chinese
-			"राम@मोहन.ईन्फो",       // Hindi
+			"伊昭傑@郵件.商務", // Chinese
+			"राम@मोहन.ईन्फो", // Hindi
 			"юзер@екзампл.ком", // Ukranian
 			"θσερ@εχαμπλε.ψομ", // Greek
 		};
@@ -166,6 +172,12 @@ namespace UnitTests
 		}
 
 		[Test]
+		public void TestInvalidAddressTopLevelDomain ()
+		{
+			Assert.IsFalse (EmailValidator.Validate ("invalid@tld"), "Top-level domains not allowed.");
+		}
+
+		[Test]
 		public void TestValidInternationalAddresses ()
 		{
 			for (int i = 0; i < ValidInternationalAddresses.Length; i++)
@@ -181,7 +193,7 @@ namespace UnitTests
 		[Test]
 		public void TestValidationAttributeValidAddresses ()
 		{
-			EmailValidationTarget target = new EmailValidationTarget ();
+			var target = new EmailValidationTarget ();
 
 			foreach (var email in ValidAddresses) {
 				target.Email = email;
@@ -193,7 +205,7 @@ namespace UnitTests
 		[Test]
 		public void TestValidationAttributeInvalidAddresses ()
 		{
-			EmailValidationTarget target = new EmailValidationTarget ();
+			var target = new EmailValidationTarget ();
 
 			foreach (var email in InvalidAddresses) {
 				target.Email = email;
