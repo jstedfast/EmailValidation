@@ -5,7 +5,7 @@
     <AssemblyTitle>EmailValidation</AssemblyTitle>
     <VersionPrefix>1.0.3</VersionPrefix>
     <Authors>Jeffrey Stedfast</Authors>
-    <TargetFramework>netstandard1.1</TargetFramework>
+    <TargetFrameworks>net40;net45;netstandard1.1;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AssemblyName>EmailValidation</AssemblyName>
@@ -24,8 +24,13 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,4 +4,5 @@ packages
 bin
 obj
 *.project.lock.json
+.vs
 *~

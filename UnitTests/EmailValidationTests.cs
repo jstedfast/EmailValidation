@@ -1,9 +1,9 @@
 //
-// Test.cs
+// EmailValidationTests.cs
 //
 // Author: Jeffrey Stedfast <jestedfa@microsoft.com>
 //
-// Copyright (c) 2013-2017 Jeffrey Stedfast
+// Copyright (c) 2013-2020 Jeffrey Stedfast
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,17 @@
 // THE SOFTWARE.
 
 using System;
-using NUnit.Framework;
-using EmailValidation;
-using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+using NUnit.Framework;
+
+using EmailValidation;
 
 namespace UnitTests
 {
 	[TestFixture]
-	public class Test
+	public class EmailValidationTests
 	{
 		static readonly string[] ValidAddresses = {
 			"\"Abc\\@def\"@example.com",

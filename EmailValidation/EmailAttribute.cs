@@ -4,7 +4,7 @@
 // Authors: Michel Feinstein <michel@feinstein.com.br>
 //          Jeffrey Stedfast <jestedfa@microsoft.com>
 //
-// Copyright (c) 2013-2017 Xamarin Inc.
+// Copyright (c) 2013-2020 Jeffrey Stedfast
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,22 +29,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EmailValidation
 {
-    /// <summary>
-    /// An attribute that validates an the syntax of an email address.
-    /// </summary>
-    /// <remarks>
-    /// An attribute that validates an the syntax of an email address.
-    /// </remarks>
+	/// <summary>
+	/// An attribute that validates an the syntax of an email address.
+	/// </summary>
+	/// <remarks>
+	/// An attribute that validates an the syntax of an email address.
+	/// </remarks>
 	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 	public sealed class EmailAttribute : ValidationAttribute
 	{
-        /// <summary>
-        /// Intantiates a new instance of <see cref="EmailAttribute"/>.
-        /// </summary>
-        /// <remarks>
-        /// Creates a new <see cref="EmailAttribute"/>.
-        /// </remarks>
-        /// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+		/// <summary>
+		/// Intantiates a new instance of <see cref="EmailAttribute"/>.
+		/// </summary>
+		/// <remarks>
+		/// Creates a new <see cref="EmailAttribute"/>.
+		/// </remarks>
+		/// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
 		/// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
 		public EmailAttribute (bool allowTopLevelDomains = false, bool allowInternational = false)
 		{
@@ -52,31 +52,31 @@ namespace EmailValidation
 			AllowInternational = allowInternational;
 		}
 
-        /// <summary>
-        /// Get or set whether or not the validator should allow top-level domains.
-        /// </summary>
-        /// <remarks>
-        /// Gets or sets whether or not the validator should allow top-level domains.
-        /// </remarks>
+		/// <summary>
+		/// Get or set whether or not the validator should allow top-level domains.
+		/// </summary>
+		/// <remarks>
+		/// Gets or sets whether or not the validator should allow top-level domains.
+		/// </remarks>
 		public bool AllowTopLevelDomains { get; set; }
 
-        /// <summary>
-        /// Get or set whether or not the validator should allow international characters.
-        /// </summary>
-        /// <remarks>
-        /// Gets or sets whether or not the validator should allow international characters.
-        /// </remarks>
+		/// <summary>
+		/// Get or set whether or not the validator should allow international characters.
+		/// </summary>
+		/// <remarks>
+		/// Gets or sets whether or not the validator should allow international characters.
+		/// </remarks>
 		public bool AllowInternational { get; set; }
 
-        /// <summary>
-        /// Validates the value.
-        /// </summary>
-        /// <remarks>
-        /// Checks whether or not the email address provided is syntactically correct.
-        /// </remarks>
-        /// <param name="value">The value to validate.</param>
-        /// <param name="validationContext">The validation context.</param>
-        /// <returns>THe validation result.</returns>
+		/// <summary>
+		/// Validates the value.
+		/// </summary>
+		/// <remarks>
+		/// Checks whether or not the email address provided is syntactically correct.
+		/// </remarks>
+		/// <param name="value">The value to validate.</param>
+		/// <param name="validationContext">The validation context.</param>
+		/// <returns>THe validation result.</returns>
 		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
 		{
 			var memberNames = new string[] { validationContext.MemberName };
