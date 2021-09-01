@@ -148,9 +148,7 @@ namespace EmailValidation
 
 		static bool SkipDomain (string text, ref int index, bool allowTopLevelDomains, bool allowInternational)
 		{
-			SubDomainType type;
-
-			if (!SkipSubDomain (text, ref index, allowInternational, out type))
+			if (!SkipSubDomain (text, ref index, allowInternational, out var type))
 				return false;
 
 			if (index < text.Length && text[index] == '.') {
