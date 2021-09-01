@@ -114,6 +114,7 @@ namespace UnitTests
 			"invalid@[127.0.0.1.]",
 			"invalid@[127.0.0.1].",
 			"invalid@[127.0.0.1]x",
+			"invalid@domain1.com@domain2.com",
 			"\"locál-part\"@example.com", // international local-part when allowInternational=false should fail
 			new string ('a', 65) + "@example.com", // local-part too long
 			"invalid@" + new string ('a', 65) + ".com", // subdomain too long
