@@ -5,7 +5,7 @@
     <AssemblyTitle>EmailValidation</AssemblyTitle>
     <VersionPrefix>1.0.5</VersionPrefix>
     <Authors>Jeffrey Stedfast</Authors>
-    <TargetFrameworks>net40;net45;netstandard1.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;net50;netstandard1.1;netstandard2.0;netstandard2.1</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AssemblyName>EmailValidation</AssemblyName>
