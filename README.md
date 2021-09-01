@@ -11,7 +11,7 @@ Supports Internationalized Mail Address standards (rfc653x).
 The easiest way to install EmailValidation is via [NuGet](https://www.nuget.org/packages/EmailValidation/).
 
 In Visual Studio's [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console),
-simply enter the following command:
+enter the following command:
 
     Install-Package EmailValidation
 
