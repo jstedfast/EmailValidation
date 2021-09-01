@@ -378,8 +378,7 @@ namespace EmailValidation
 			if (index + 8 >= email.Length)
 				return false;
 
-			var ipv6 = email.Substring (index, 5);
-			if (ipv6.ToLowerInvariant () == "ipv6:") {
+			if (string.Compare (email, index, "IPv6:", 0, 5, StringComparison.OrdinalIgnoreCase) == 0) {
 				index += "IPv6:".Length;
 				if (!SkipIPv6Literal (email, ref index))
 					return false;
