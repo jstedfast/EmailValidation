@@ -52,8 +52,8 @@ namespace UnitTests
 			"valid.ipv6.addr@[IPv6:fe80::230:48ff:fe33:bc33]",
 			"valid.ipv6.addr@[IPv6:fe80:0000:0000:0000:0202:b3ff:fe1e:8329]",
 			"valid.ipv6v4.addr@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:127.0.0.1]",
-			new string ('a', 63) + "@example.com", // max local-part length (63 characters)
-			"valid@" + new string ('a', 63) + ".com", // max subdomain length (63 characters)
+			new string ('a', 64) + "@example.com", // max local-part length (64 characters)
+			"valid@" + new string ('a', 64) + ".com", // max subdomain length (64 characters)
 			"valid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 63) + ".com", // max length (256 characters)
 
 			// examples from wikipedia
