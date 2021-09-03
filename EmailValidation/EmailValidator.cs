@@ -211,7 +211,7 @@ namespace EmailValidation
 				int startIndex = index;
 				int value = 0;
 
-				while (index < text.Length && text[index] >= '0' && text[index] <= '9') {
+				while (index < text.Length && IsDigit (text[index])) {
 					value = (value * 10) + (text[index] - '0');
 					index++;
 				}
