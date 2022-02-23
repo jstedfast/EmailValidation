@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata minClientVersion="2.12">
     <id>EmailValidation</id>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <title>EmailValidation</title>
     <authors>Jeffrey Stedfast</authors>
     <owners>Jeffrey Stedfast</owners>
@@ -15,7 +15,11 @@
 Supports mail addresses as defined in rfc5322 as well as the new Internationalized Mail Address standards (rfc653x).</description>
     <summary>A simple (but correct) .NET class for validating email addresses.</summary>
     <releaseNotes>
-      Improved validator by avoiding the use of String.Substring() in order to do substring comparisons. Instead, the code now uses the string.Compare() overload that allows substring comparisons.
+      * Fixed validator to correctly evaluate addresses with 64 characters in the local-part (the part before the '@').
+	  * Dropped support for .NET Framework v4.5.
+	  * Added support for .NET Framework v4.5.2.
+	  * Dropped support for .NETStandard v1.1.
+	  * Added support for .NET 6.0.
     </releaseNotes>
     <copyright>Jeffrey Stedfast</copyright>
     <language>en-US</language>
@@ -23,13 +27,11 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
     <frameworkAssemblies>
     </frameworkAssemblies>
     <dependencies>
-      <group targetFramework="net40" />
-      <group targetFramework="net45" />
-      <group targetFramework="net50">
+      <group targetFramework="net452" />
+      <group targetFramework="net5.0">
         <dependency id="System.ComponentModel.Annotations" version="4.3.0" />
       </group>
-      <group targetFramework=".NETStandard1.1">
-        <dependency id="NETStandard.Library" version="1.6.1" />
+      <group targetFramework="net6.0">
         <dependency id="System.ComponentModel.Annotations" version="4.3.0" />
       </group>
       <group targetFramework=".NETStandard2.0">
@@ -41,14 +43,12 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
     </dependencies>
   </metadata>
   <files>
-    <file src="EmailValidation\bin\Release\net40\EmailValidation.dll" target="lib\net40\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\net40\EmailValidation.xml" target="lib\net40\EmailValidation.xml" />
-    <file src="EmailValidation\bin\Release\net45\EmailValidation.dll" target="lib\net45\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\net45\EmailValidation.xml" target="lib\net45\EmailValidation.xml" />
-    <file src="EmailValidation\bin\Release\net50\EmailValidation.dll" target="lib\net50\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\net50\EmailValidation.xml" target="lib\net50\EmailValidation.xml" />
-    <file src="EmailValidation\bin\Release\netstandard1.1\EmailValidation.dll" target="lib\netstandard1.1\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\netstandard1.1\EmailValidation.xml" target="lib\netstandard1.1\EmailValidation.xml" />
+    <file src="EmailValidation\bin\Release\net452\EmailValidation.dll" target="lib\net452\EmailValidation.dll" />
+    <file src="EmailValidation\bin\Release\net452\EmailValidation.xml" target="lib\net452\EmailValidation.xml" />
+    <file src="EmailValidation\bin\Release\net5.0\EmailValidation.dll" target="lib\net5.0\EmailValidation.dll" />
+    <file src="EmailValidation\bin\Release\net5.0\EmailValidation.xml" target="lib\net5.0\EmailValidation.xml" />
+    <file src="EmailValidation\bin\Release\net6.0\EmailValidation.dll" target="lib\net6.0\EmailValidation.dll" />
+    <file src="EmailValidation\bin\Release\net6.0\EmailValidation.xml" target="lib\net6.0\EmailValidation.xml" />
     <file src="EmailValidation\bin\Release\netstandard2.0\EmailValidation.dll" target="lib\netstandard2.0\EmailValidation.dll" />
     <file src="EmailValidation\bin\Release\netstandard2.0\EmailValidation.xml" target="lib\netstandard2.0\EmailValidation.xml" />
     <file src="EmailValidation\bin\Release\netstandard2.1\EmailValidation.dll" target="lib\netstandard2.1\EmailValidation.dll" />
