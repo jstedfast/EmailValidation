@@ -45,6 +45,11 @@ namespace EmailValidation
 			AlphaNumeric   = 3
 		}
 
+		static bool IsControl (char c)
+		{
+			return c <= 31 || c == 127;
+		}
+
 		static bool IsDigit (char c)
 		{
 			return (c >= '0' && c <= '9');
@@ -62,6 +67,10 @@ namespace EmailValidation
 
 		static bool IsAtom (char c, bool allowInternational)
 		{
+			// check for control characters
+			if (IsControl (c))
+				return false;
+
 			return c < 128 ? IsLetterOrDigit (c) || AtomCharacters.IndexOf (c) != -1 : allowInternational;
 		}
 
@@ -180,7 +189,7 @@ namespace EmailValidation
 			index++;
 
 			while (index < text.Length) {
-				if (text[index] >= 128 && !allowInternational)
+				if (IsControl (text[index]) || (text[index] >= 128 && !allowInternational))
 					return false;
 
 				if (text[index] == '\\') {
