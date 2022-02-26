@@ -272,7 +272,7 @@ namespace EmailValidation
 				if (index >= text.Length)
 					break;
 
-				if (index > startIndex && colons > 2 && text[index] == '.') {
+				if (index > startIndex && text[index] == '.' && (compact || colons == 6)) {
 					// IPv6v4
 					index = startIndex;
 

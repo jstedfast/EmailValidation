@@ -48,10 +48,12 @@ namespace UnitTests
 			"valid@[1.1.1.1]",
 			"valid.ipv4.addr@[123.1.72.10]",
 			"valid.ipv4.addr@[255.255.255.255]",
+			"valid.ipv6.addr@[IPv6:::]",
 			"valid.ipv6.addr@[IPv6:0::1]",
 			"valid.ipv6.addr@[IPv6:2607:f0d0:1002:51::4]",
 			"valid.ipv6.addr@[IPv6:fe80::230:48ff:fe33:bc33]",
 			"valid.ipv6.addr@[IPv6:fe80:0000:0000:0000:0202:b3ff:fe1e:8329]",
+			"valid.ipv6v4.addr@[IPv6:::12.34.56.78]",
 			"valid.ipv6v4.addr@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:127.0.0.1]",
 			new string ('a', 64) + "@example.com", // max local-part length (64 characters)
 			"valid@" + new string ('a', 63) + ".com", // max subdomain length (64 characters)
