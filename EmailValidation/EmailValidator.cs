@@ -372,8 +372,8 @@ namespace EmailValidation
 			// address literal
 			index++;
 
-			// we need at least 8 more characters
-			if (index + 8 >= email.Length)
+			// we need at least 7 more characters
+			if (index + 7 >= email.Length)
 				return false;
 
 			if (string.Compare (email, index, "IPv6:", 0, 5, StringComparison.OrdinalIgnoreCase) == 0) {

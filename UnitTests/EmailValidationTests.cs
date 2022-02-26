@@ -45,6 +45,7 @@ namespace UnitTests
 			"$A12345@example.com",
 			"!def!xyz%abc@example.com",
 			"_somename@example.com",
+			"valid@[1.1.1.1]",
 			"valid.ipv4.addr@[123.1.72.10]",
 			"valid.ipv4.addr@[255.255.255.255]",
 			"valid.ipv6.addr@[IPv6:0::1]",
