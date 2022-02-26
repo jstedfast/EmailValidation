@@ -262,8 +262,9 @@ namespace EmailValidation
 		//             ; IPv4-address-literal may be present
 		static bool SkipIPv6Literal (string text, ref int index)
 		{
+			bool needGroup = false;
 			bool compact = false;
-			int colons = 0;
+			int groups = 0;
 
 			while (index < text.Length) {
 				int startIndex = index;
@@ -274,19 +275,24 @@ namespace EmailValidation
 				if (index >= text.Length)
 					break;
 
-				if (index > startIndex && text[index] == '.' && (compact || colons == 6)) {
+				if (index > startIndex && text[index] == '.' && (compact || groups == 6)) {
 					// IPv6v4
 					index = startIndex;
 
 					if (!SkipIPv4Literal (text, ref index))
 						return false;
 
-					return compact ? colons < 6 : colons == 6;
+					return compact ? groups <= 4 : groups == 6;
 				}
 
 				int count = index - startIndex;
 				if (count > 4)
 					return false;
+
+				if (count > 0) {
+					needGroup = false;
+					groups++;
+				}
 
 				if (text[index] != ':')
 					break;
@@ -304,16 +310,12 @@ namespace EmailValidation
 						return false;
 
 					compact = true;
-					colons += 2;
 				} else {
-					colons++;
+					needGroup = true;
 				}
 			}
 
-			if (colons < 2)
-				return false;
-
-			return compact ? colons < 7 : colons == 7;
+			return !needGroup && (compact ? groups <= 6 : groups == 8);
 		}
 
 		/// <summary>
@@ -386,7 +388,7 @@ namespace EmailValidation
 			// address literal
 			index++;
 
-			// we need at least 7 more characters
+			// We need at least 7 more characters. "1.1.1.1" and "IPv6:::" are the shortest literals we can have.
 			if (index + 7 >= email.Length)
 				return false;
 

@@ -50,6 +50,8 @@ namespace UnitTests
 			"valid.ipv4.addr@[255.255.255.255]",
 			"valid.ipv6.addr@[IPv6:::]",
 			"valid.ipv6.addr@[IPv6:0::1]",
+			"valid.ipv6.addr@[IPv6:::12.34.56.78]",
+			"valid.ipv6.addr@[IPv6:::3333:4444:5555:6666:7777:8888]",
 			"valid.ipv6.addr@[IPv6:2607:f0d0:1002:51::4]",
 			"valid.ipv6.addr@[IPv6:fe80::230:48ff:fe33:bc33]",
 			"valid.ipv6.addr@[IPv6:fe80:0000:0000:0000:0202:b3ff:fe1e:8329]",
@@ -130,6 +132,7 @@ namespace UnitTests
 			"invalid@[IPv6:1111:::1111::1111]", // more than 2 consecutive :'s in IPv6
 			"invalid@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:555.666.777.888]", // invalid IPv4 address in IPv6v4
 			"invalid@[IPv6:1111:1111]", // incomplete IPv6
+			"invalid@[IPv6:1::2:]", // incomplete IPv6
 			"\"invalid-qstring@example.com", // unterminated q-string in local-part of the addr-spec
 			"\"control-\u007f-character\"@example.com",
 			"\"control-\u001f-character\"@example.com",
