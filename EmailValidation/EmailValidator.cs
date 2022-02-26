@@ -152,7 +152,9 @@ namespace EmailValidation
 			if (index == text.Length && (index - startIndex) == 1)
 				return false;
 
-			// According to rfc2181, each subdomain can only be up to 63 characters long.
+			// https://datatracker.ietf.org/doc/html/rfc2181#section-11
+			// The length of any one label is limited to between 1 and 63 octets. A full domain
+			// name is limited to 255 octets (including the separators).
 			return (index - startIndex) < 64 && text[index - 1] != '-';
 		}
 
@@ -368,6 +370,8 @@ namespace EmailValidation
 				}
 			}
 
+			// https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
+			// The maximum total length of a user name or other local-part is 64 octets.
 			if (index + 1 >= email.Length || index > 64 || email[index++] != '@')
 				return false;
 
