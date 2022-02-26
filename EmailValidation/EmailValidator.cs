@@ -338,7 +338,7 @@ namespace EmailValidation
 			if (email == null)
 				throw new ArgumentNullException (nameof (email));
 
-			if (email.Length == 0 || email.Length > 256)
+			if (email.Length == 0 || email.Length > 254)
 				return false;
 
 			// Local-part = Dot-string / Quoted-string

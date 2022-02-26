@@ -57,7 +57,8 @@ namespace UnitTests
 			"valid.ipv6v4.addr@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:127.0.0.1]",
 			new string ('a', 64) + "@example.com", // max local-part length (64 characters)
 			"valid@" + new string ('a', 63) + ".com", // max subdomain length (64 characters)
-			"valid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 63) + ".com", // max length (256 characters)
+			"valid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 61) + ".com", // max length (254 characters)
+			new string ('a', 64) + "@" + new string ('a', 45) + "." + new string ('b', 46) + "." + new string ('c', 45) + "." + new string ('d', 46) + ".com", // max local-part length (64 characters)
 
 			// examples from wikipedia
 			"niceandsimple@example.com",
@@ -121,7 +122,7 @@ namespace UnitTests
 			"\"locál-part\"@example.com", // international local-part when allowInternational=false should fail
 			new string ('a', 65) + "@example.com", // local-part too long
 			"invalid@" + new string ('a', 64) + ".com", // subdomain too long
-			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 62) + ".com", // too long (256 characters)
+			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 60) + ".com", // too long (254 characters)
 			"invalid@[]", // empty IP literal
 			"invalid@[111.111.111.111", // unenclosed IPv4 literal
 			"invalid@[IPv6:2607:f0d0:1002:51::4", // unenclosed IPv6 literal
