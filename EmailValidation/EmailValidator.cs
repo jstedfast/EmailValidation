@@ -152,7 +152,8 @@ namespace EmailValidation
 			if (index == text.Length && (index - startIndex) == 1)
 				return false;
 
-			return (index - startIndex) <= 64 && text[index - 1] != '-';
+			// According to rfc2181, each subdomain can only be up to 63 characters long.
+			return (index - startIndex) < 64 && text[index - 1] != '-';
 		}
 
 		static bool SkipDomain (string text, ref int index, bool allowTopLevelDomains, bool allowInternational)

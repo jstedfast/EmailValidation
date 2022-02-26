@@ -54,7 +54,7 @@ namespace UnitTests
 			"valid.ipv6.addr@[IPv6:fe80:0000:0000:0000:0202:b3ff:fe1e:8329]",
 			"valid.ipv6v4.addr@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:127.0.0.1]",
 			new string ('a', 64) + "@example.com", // max local-part length (64 characters)
-			"valid@" + new string ('a', 64) + ".com", // max subdomain length (64 characters)
+			"valid@" + new string ('a', 63) + ".com", // max subdomain length (64 characters)
 			"valid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 63) + ".com", // max length (256 characters)
 
 			// examples from wikipedia
@@ -118,7 +118,7 @@ namespace UnitTests
 			"invalid@domain1.com@domain2.com",
 			"\"locál-part\"@example.com", // international local-part when allowInternational=false should fail
 			new string ('a', 65) + "@example.com", // local-part too long
-			"invalid@" + new string ('a', 65) + ".com", // subdomain too long
+			"invalid@" + new string ('a', 64) + ".com", // subdomain too long
 			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 62) + ".com", // too long (256 characters)
 			"invalid@[]", // empty IP literal
 			"invalid@[111.111.111.111", // unenclosed IPv4 literal
