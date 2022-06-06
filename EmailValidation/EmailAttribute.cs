@@ -30,16 +30,16 @@ using System.ComponentModel.DataAnnotations;
 namespace EmailValidation
 {
 	/// <summary>
-	/// An attribute that validates an the syntax of an email address.
+	/// An attribute that validates the syntax of an email address.
 	/// </summary>
 	/// <remarks>
-	/// An attribute that validates an the syntax of an email address.
+	/// An attribute that validates the syntax of an email address.
 	/// </remarks>
 	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 	public sealed class EmailAttribute : ValidationAttribute
 	{
 		/// <summary>
-		/// Intantiates a new instance of <see cref="EmailAttribute"/>.
+		/// Instantiates a new instance of <see cref="EmailAttribute"/>.
 		/// </summary>
 		/// <remarks>
 		/// Creates a new <see cref="EmailAttribute"/>.
@@ -58,6 +58,7 @@ namespace EmailValidation
 		/// <remarks>
 		/// Gets or sets whether or not the validator should allow top-level domains.
 		/// </remarks>
+		/// <value><c>true</c> if top-level domains should be allowed; otherwise, <c>false</c>.</value>
 		public bool AllowTopLevelDomains { get; set; }
 
 		/// <summary>
@@ -66,6 +67,7 @@ namespace EmailValidation
 		/// <remarks>
 		/// Gets or sets whether or not the validator should allow international characters.
 		/// </remarks>
+		/// <value><c>true</c> if international characters should be allowed; otherwise, <c>false</c>.</value>
 		public bool AllowInternational { get; set; }
 
 		/// <summary>
@@ -74,9 +76,9 @@ namespace EmailValidation
 		/// <remarks>
 		/// Checks whether or not the email address provided is syntactically correct.
 		/// </remarks>
+		/// <returns>The validation result.</returns>
 		/// <param name="value">The value to validate.</param>
 		/// <param name="validationContext">The validation context.</param>
-		/// <returns>THe validation result.</returns>
 		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
 		{
 			var memberNames = new string[] { validationContext.MemberName };
