@@ -81,7 +81,7 @@ namespace EmailValidation
 		/// <param name="validationContext">The validation context.</param>
 		protected override ValidationResult IsValid (object value, ValidationContext validationContext)
 		{
-			var memberNames = new string[] { validationContext.MemberName };
+			var memberNames = new string[] { validationContext?.MemberName ?? nameof (value) };
 
 			if (value == null)
 				return new ValidationResult ("Email can't be null", memberNames);
@@ -90,6 +90,19 @@ namespace EmailValidation
 				return ValidationResult.Success;
 
 			return new ValidationResult ("Email invalid", memberNames);
+		}
+
+		/// <summary>
+		/// Validates the value.
+		/// </summary>
+		/// <remarks>
+		/// Checks whether or not the email address provided is syntactically correct.
+		/// </remarks>
+		/// <returns><c>true</c> if the value is a valid email address; otherwise, <c>false</c>.</returns>
+		/// <param name="value">The value to validate.</param>
+		public override bool IsValid (object value)
+		{
+			return value != null && EmailValidator.Validate ((string) value, AllowTopLevelDomains, AllowInternational);
 		}
 	}
 }
