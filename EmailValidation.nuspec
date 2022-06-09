@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata minClientVersion="2.12">
     <id>EmailValidation</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <title>EmailValidation</title>
     <authors>Jeffrey Stedfast</authors>
     <owners>Jeffrey Stedfast</owners>
@@ -15,11 +15,10 @@
 Supports mail addresses as defined in rfc5322 as well as the new Internationalized Mail Address standards (rfc653x).</description>
     <summary>A simple (but correct) .NET class for validating email addresses.</summary>
     <releaseNotes>
-      * Fixed validator to correctly evaluate addresses with 64 characters in the local-part (the part before the '@').
-	  * Dropped support for .NET Framework v4.5.
-	  * Added support for .NET Framework v4.5.2.
-	  * Dropped support for .NETStandard v1.1.
-	  * Added support for .NET 6.0.
+      * Fixed the validator to allow email addresses up to 254 characters (instead of 253).
+	  * Fixed the IPv6 literal parser.
+	  * Fixed validator to disallow control characters in local-parts.
+	  * Fixed the EmailAttribute.IsValid() method to allow a null ValidationContext.
     </releaseNotes>
     <copyright>Jeffrey Stedfast</copyright>
     <language>en-US</language>
