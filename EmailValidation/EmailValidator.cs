@@ -90,7 +90,7 @@ namespace EmailValidation
 				return false;
 			}
 
-			if (allowInternational) {
+			if (allowInternational && !char.IsWhiteSpace (c)) {
 				type |= SubDomainType.Alphabetic;
 				return true;
 			}
@@ -116,7 +116,7 @@ namespace EmailValidation
 				return false;
 			}
 
-			if (allowInternational) {
+			if (allowInternational && !char.IsWhiteSpace (c)) {
 				type = SubDomainType.Alphabetic;
 				return true;
 			}
