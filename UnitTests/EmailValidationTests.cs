@@ -133,6 +133,7 @@ namespace UnitTests
 			"invalid@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:555.666.777.888]", // invalid IPv4 address in IPv6v4
 			"invalid@[IPv6:1111:1111]", // incomplete IPv6
 			"invalid@[IPv6:1::2:]", // incomplete IPv6
+			"invalid@[IPv6::1::1]",
 			"\"invalid-qstring@example.com", // unterminated q-string in local-part of the addr-spec
 			"\"control-\u007f-character\"@example.com",
 			"\"control-\u001f-character\"@example.com",

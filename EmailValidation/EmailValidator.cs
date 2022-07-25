@@ -289,13 +289,22 @@ namespace EmailValidation
 				if (count > 4)
 					return false;
 
+				bool comp;
+
 				if (count > 0) {
 					needGroup = false;
+					comp = false;
 					groups++;
-				}
 
-				if (text[index] != ':')
+					if (text[index] != ':')
+						break;
+				} else if (text[index] == ':') {
+					// There were no hex digits at the start, so this must be an IPv6-comp
+					// or an IPv6v4-comp which means we will need exactly 2 colons.
+					comp = true;
+				} else {
 					break;
+				}
 
 				startIndex = index;
 				while (index < text.Length && text[index] == ':')
@@ -310,6 +319,9 @@ namespace EmailValidation
 						return false;
 
 					compact = true;
+				} else if (comp) {
+					// expected exactly 2 colons for IPv6-comp or IPv6v4-comp address
+					return false;
 				} else {
 					needGroup = true;
 				}
