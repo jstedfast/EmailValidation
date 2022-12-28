@@ -83,10 +83,7 @@ namespace EmailValidation
 		{
 			var memberNames = new string[] { validationContext?.MemberName ?? nameof (value) };
 
-			if (value == null)
-				return new ValidationResult ("Email can't be null", memberNames);
-
-			if (EmailValidator.Validate ((string) value, AllowTopLevelDomains, AllowInternational))
+			if (value == null || EmailValidator.Validate ((string) value, AllowTopLevelDomains, AllowInternational))
 				return ValidationResult.Success;
 
 			return new ValidationResult ("Email invalid", memberNames);
@@ -102,7 +99,7 @@ namespace EmailValidation
 		/// <param name="value">The value to validate.</param>
 		public override bool IsValid (object value)
 		{
-			return value != null && EmailValidator.Validate ((string) value, AllowTopLevelDomains, AllowInternational);
+			return value == null || EmailValidator.Validate ((string) value, AllowTopLevelDomains, AllowInternational);
 		}
 	}
 }
