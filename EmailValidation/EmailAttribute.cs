@@ -35,7 +35,7 @@ namespace EmailValidation
 	/// <remarks>
 	/// An attribute that validates the syntax of an email address.
 	/// </remarks>
-	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
 	public sealed class EmailAttribute : ValidationAttribute
 	{
 		/// <summary>
