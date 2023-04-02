@@ -71,7 +71,7 @@ namespace EmailValidation
 			if (IsControl (c))
 				return false;
 
-			return c < 128 ? IsLetterOrDigit (c) || AtomCharacters.IndexOf (c) != -1 : allowInternational;
+			return c < 128 ? IsLetterOrDigit (c) || AtomCharacters.IndexOf (c) != -1 : allowInternational && !char.IsWhiteSpace (c);
 		}
 
 		static bool IsDomain (char c, bool allowInternational, ref SubDomainType type)
