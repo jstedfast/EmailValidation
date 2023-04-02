@@ -42,10 +42,8 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
     </dependencies>
   </metadata>
   <files>
-    <file src="EmailValidation\bin\Release\net452\EmailValidation.dll" target="lib\net452\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\net452\EmailValidation.xml" target="lib\net452\EmailValidation.xml" />
-    <file src="EmailValidation\bin\Release\net5.0\EmailValidation.dll" target="lib\net5.0\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\net5.0\EmailValidation.xml" target="lib\net5.0\EmailValidation.xml" />
+    <file src="EmailValidation\bin\Release\net462\EmailValidation.dll" target="lib\net462\EmailValidation.dll" />
+    <file src="EmailValidation\bin\Release\net462\EmailValidation.xml" target="lib\net462\EmailValidation.xml" />
     <file src="EmailValidation\bin\Release\net6.0\EmailValidation.dll" target="lib\net6.0\EmailValidation.dll" />
     <file src="EmailValidation\bin\Release\net6.0\EmailValidation.xml" target="lib\net6.0\EmailValidation.xml" />
     <file src="EmailValidation\bin\Release\netstandard2.0\EmailValidation.dll" target="lib\netstandard2.0\EmailValidation.dll" />
