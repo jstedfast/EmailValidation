@@ -260,7 +260,7 @@ namespace UnitTests
 				Email = null
 			};
 
-			Assert.IsFalse (AreAttributesValid (target), "Email can't be null {0}", "");
+			Assert.IsTrue (AreAttributesValid (target), "Email is allowed to be null");
 		}
 
 		static bool AreAttributesValid (object target)
