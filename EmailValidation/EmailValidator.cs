@@ -36,6 +36,9 @@ namespace EmailValidation
 	public static class EmailValidator
 	{
 		const string AtomCharacters = "!#$%&'*+-/=?^_`{|}~";
+		const int MaxEmailAddressLength = 254;
+		const int MaxDomainLabelLength = 63;
+		const int MaxLocalPartLength = 64;
 
 		[Flags]
 		enum SubDomainType {
@@ -43,6 +46,28 @@ namespace EmailValidation
 			Alphabetic     = 1,
 			Numeric        = 2,
 			AlphaNumeric   = 3
+		}
+
+		static int Measure (string text, int startIndex, int endIndex, bool allowInternational)
+		{
+			int count;
+
+			if (allowInternational) {
+				int index = startIndex;
+
+				count = 0;
+				while (index < endIndex) {
+					if (index + 1 < endIndex && char.IsSurrogatePair (text, index))
+						index++;
+
+					index++;
+					count++;
+				}
+			} else {
+				count = endIndex - startIndex;
+			}
+
+			return count;
 		}
 
 		static bool IsControl (char c)
@@ -148,14 +173,16 @@ namespace EmailValidation
 			while (index < text.Length && IsDomain (text[index], allowInternational, ref type))
 				index++;
 
-			// Don't allow single-character top-level domains.
-			if (index == text.Length && (index - startIndex) == 1)
-				return false;
-
 			// https://datatracker.ietf.org/doc/html/rfc2181#section-11
 			// The length of any one label is limited to between 1 and 63 octets. A full domain
 			// name is limited to 255 octets (including the separators).
-			return (index - startIndex) < 64 && text[index - 1] != '-';
+			int length = Measure (text, startIndex, index, allowInternational);
+
+			// Don't allow single-character top-level domains.
+			if (index == text.Length && length == 1)
+				return false;
+
+			return length <= MaxDomainLabelLength && text[index - 1] != '-';
 		}
 
 		static bool SkipDomain (string text, ref int index, bool allowTopLevelDomains, bool allowInternational)
@@ -354,7 +381,7 @@ namespace EmailValidation
 			if (email == null)
 				throw new ArgumentNullException (nameof (email));
 
-			if (email.Length == 0 || email.Length > 254)
+			if (email.Length == 0 || Measure (email, 0, email.Length, allowInternational) > MaxEmailAddressLength)
 				return false;
 
 			// Local-part = Dot-string / Quoted-string
@@ -386,7 +413,8 @@ namespace EmailValidation
 
 			// https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
 			// The maximum total length of a user name or other local-part is 64 octets.
-			if (index + 1 >= email.Length || index > 64 || email[index++] != '@')
+			int localPartLength = Measure (email, 0, index, allowInternational);
+			if (index + 1 >= email.Length || localPartLength > MaxLocalPartLength || email[index++] != '@')
 				return false;
 
 			if (email[index] != '[') {

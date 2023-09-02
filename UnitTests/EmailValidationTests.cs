@@ -182,6 +182,11 @@ namespace UnitTests
 			"राम@मोहन.ईन्फो", // Hindi
 			"юзер@екзампл.ком", // Ukranian
 			"θσερ@εχαμπλε.ψομ", // Greek
+			"𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈@example.com", // surrogate pair local-part
+		};
+
+		static readonly string[] InvalidInternationalAddresses = {
+			"test@𐍈", // single "character" surrogate-pair domain
 		};
 
 		[Test]
@@ -208,7 +213,14 @@ namespace UnitTests
 		public void TestValidInternationalAddresses ()
 		{
 			for (int i = 0; i < ValidInternationalAddresses.Length; i++)
-				Assert.IsTrue (EmailValidator.Validate (ValidInternationalAddresses[i], true, true), "Valid International Address #{0}", i);
+				Assert.IsTrue (EmailValidator.Validate (ValidInternationalAddresses[i], true, true), "Valid International Address #{0}: {1}", i, ValidInternationalAddresses[i]);
+		}
+
+		[Test]
+		public void TestInvalidInternationalAddresses ()
+		{
+			for (int i = 0; i < InvalidInternationalAddresses.Length; i++)
+				Assert.IsFalse (EmailValidator.Validate (InvalidInternationalAddresses[i], true, true), "Invalid International Address #{0}: {1}", i, InvalidInternationalAddresses[i]);
 		}
 
 		[Test]
