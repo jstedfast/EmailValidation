@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>A simple (but correct) .NET class for validating email addresses.</Description>
     <AssemblyTitle>EmailValidation</AssemblyTitle>
-    <VersionPrefix>1.0.9</VersionPrefix>
+    <VersionPrefix>1.0.10</VersionPrefix>
     <Authors>Jeffrey Stedfast</Authors>
     <TargetFrameworks>net462;net6.0;netstandard2.0;netstandard2.1</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
