@@ -255,6 +255,16 @@ namespace UnitTests
 			Assert.IsTrue (AreAttributesValid (target));
 		}
 
+		[TestCaseSource(nameof(InvalidInternationalAddresses))]
+		public void TestValidationAttributeInvalidInternationalAddresses (string invalidInternationalAddress)
+		{
+			var target = new InternationalEmailValidationTarget () {
+				Email = invalidInternationalAddress
+			};
+
+			Assert.IsFalse (AreAttributesValid (target));
+		}
+
 		[Test]
 		public void TestValidationAttributeNullEmail ()
 		{
