@@ -189,18 +189,16 @@ namespace UnitTests
 			"test@𐍈", // single "character" surrogate-pair domain
 		};
 
-		[Test]
-		public void TestValidAddresses ()
+		[TestCaseSource(nameof(ValidAddresses))]
+		public void TestValidAddresses (string validAddress)
 		{
-			for (int i = 0; i < ValidAddresses.Length; i++)
-				Assert.IsTrue (EmailValidator.Validate (ValidAddresses[i], true), "Valid Address #{0}: {1}", i, ValidAddresses[i]);
+			Assert.IsTrue (EmailValidator.Validate (validAddress, true));
 		}
 
-		[Test]
-		public void TestInvalidAddresses ()
+		[TestCaseSource(nameof(InvalidAddresses))]
+		public void TestInvalidAddresses (string invalidAddress)
 		{
-			for (int i = 0; i < InvalidAddresses.Length; i++)
-				Assert.IsFalse (EmailValidator.Validate (InvalidAddresses[i], true), "Invalid Address #{0}: {1}", i, InvalidAddresses[i]);
+			Assert.IsFalse (EmailValidator.Validate (invalidAddress, true));
 		}
 
 		[Test]
@@ -209,18 +207,16 @@ namespace UnitTests
 			Assert.IsFalse (EmailValidator.Validate ("invalid@tld"), "Top-level domains not allowed.");
 		}
 
-		[Test]
-		public void TestValidInternationalAddresses ()
+		[TestCaseSource(nameof(ValidInternationalAddresses))]
+		public void TestValidInternationalAddresses (string validInternationalAddress)
 		{
-			for (int i = 0; i < ValidInternationalAddresses.Length; i++)
-				Assert.IsTrue (EmailValidator.Validate (ValidInternationalAddresses[i], true, true), "Valid International Address #{0}: {1}", i, ValidInternationalAddresses[i]);
+			Assert.IsTrue (EmailValidator.Validate (validInternationalAddress, true, true));
 		}
 
-		[Test]
-		public void TestInvalidInternationalAddresses ()
+		[TestCaseSource(nameof(InvalidInternationalAddresses))]
+		public void TestInvalidInternationalAddresses (string invalidInternationalAddress)
 		{
-			for (int i = 0; i < InvalidInternationalAddresses.Length; i++)
-				Assert.IsFalse (EmailValidator.Validate (InvalidInternationalAddresses[i], true, true), "Invalid International Address #{0}: {1}", i, InvalidInternationalAddresses[i]);
+			Assert.IsFalse (EmailValidator.Validate (invalidInternationalAddress, true, true));
 		}
 
 		[Test]
@@ -229,40 +225,34 @@ namespace UnitTests
 			Assert.Throws<ArgumentNullException> (() => EmailValidator.Validate (null, true, true), "Null Address");
 		}
 
-		[Test]
-		public void TestValidationAttributeValidAddresses ()
+		[TestCaseSource(nameof(ValidAddresses))]
+		public void TestValidationAttributeValidAddresses (string validAddress)
 		{
-			var target = new EmailValidationTarget ();
+			var target = new EmailValidationTarget () {
+				Email = validAddress
+			};
 
-			foreach (var email in ValidAddresses) {
-				target.Email = email;
-
-				Assert.IsTrue (AreAttributesValid (target), "Valid Address {0}", email);
-			}
+			Assert.IsTrue (AreAttributesValid (target));
 		}
 
-		[Test]
-		public void TestValidationAttributeInvalidAddresses ()
+		[TestCaseSource(nameof(InvalidAddresses))]
+		public void TestValidationAttributeInvalidAddresses (string invalidAddress)
 		{
-			var target = new EmailValidationTarget ();
+			var target = new EmailValidationTarget () {
+				Email = invalidAddress
+			};
 
-			foreach (var email in InvalidAddresses) {
-				target.Email = email;
-
-				Assert.IsFalse (AreAttributesValid (target), "Invalid Address {0}", email);
-			}
+			Assert.IsFalse (AreAttributesValid (target));
 		}
 
-		[Test]
-		public void TestValidationAttributeValidInternationalAddresses ()
+		[TestCaseSource(nameof(ValidInternationalAddresses))]
+		public void TestValidationAttributeValidInternationalAddresses (string validInternationalAddress)
 		{
-			var target = new InternationalEmailValidationTarget ();
+			var target = new InternationalEmailValidationTarget () {
+				Email = validInternationalAddress
+			};
 
-			foreach (var email in ValidInternationalAddresses) {
-				target.Email = email;
-
-				Assert.IsTrue (AreAttributesValid (target), "Valid International Address {0}", email);
-			}
+			Assert.IsTrue (AreAttributesValid (target));
 		}
 
 		[Test]
