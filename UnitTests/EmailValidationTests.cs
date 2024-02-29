@@ -3,7 +3,7 @@
 //
 // Author: Jeffrey Stedfast <jestedfa@microsoft.com>
 //
-// Copyright (c) 2013-2023 Jeffrey Stedfast
+// Copyright (c) 2013-2024 Jeffrey Stedfast
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -192,31 +192,31 @@ namespace UnitTests
 		[TestCaseSource(nameof(ValidAddresses))]
 		public void TestValidAddresses (string validAddress)
 		{
-			Assert.IsTrue (EmailValidator.Validate (validAddress, true));
+			Assert.That (EmailValidator.Validate (validAddress, true), Is.True);
 		}
 
 		[TestCaseSource(nameof(InvalidAddresses))]
 		public void TestInvalidAddresses (string invalidAddress)
 		{
-			Assert.IsFalse (EmailValidator.Validate (invalidAddress, true));
+			Assert.That (EmailValidator.Validate (invalidAddress, true), Is.False);
 		}
 
 		[Test]
 		public void TestInvalidAddressTopLevelDomain ()
 		{
-			Assert.IsFalse (EmailValidator.Validate ("invalid@tld"), "Top-level domains not allowed.");
+			Assert.That (EmailValidator.Validate ("invalid@tld"), Is.False, "Top-level domains not allowed.");
 		}
 
 		[TestCaseSource(nameof(ValidInternationalAddresses))]
 		public void TestValidInternationalAddresses (string validInternationalAddress)
 		{
-			Assert.IsTrue (EmailValidator.Validate (validInternationalAddress, true, true));
+			Assert.That (EmailValidator.Validate (validInternationalAddress, true, true), Is.True);
 		}
 
 		[TestCaseSource(nameof(InvalidInternationalAddresses))]
 		public void TestInvalidInternationalAddresses (string invalidInternationalAddress)
 		{
-			Assert.IsFalse (EmailValidator.Validate (invalidInternationalAddress, true, true));
+			Assert.That (EmailValidator.Validate (invalidInternationalAddress, true, true), Is.False);
 		}
 
 		[Test]
@@ -232,7 +232,7 @@ namespace UnitTests
 				Email = validAddress
 			};
 
-			Assert.IsTrue (AreAttributesValid (target));
+			Assert.That (AreAttributesValid (target), Is.True);
 		}
 
 		[TestCaseSource(nameof(InvalidAddresses))]
@@ -242,7 +242,7 @@ namespace UnitTests
 				Email = invalidAddress
 			};
 
-			Assert.IsFalse (AreAttributesValid (target));
+			Assert.That (AreAttributesValid (target), Is.False);
 		}
 
 		[TestCaseSource(nameof(ValidInternationalAddresses))]
@@ -252,7 +252,7 @@ namespace UnitTests
 				Email = validInternationalAddress
 			};
 
-			Assert.IsTrue (AreAttributesValid (target));
+			Assert.That (AreAttributesValid (target), Is.True);
 		}
 
 		[TestCaseSource(nameof(InvalidInternationalAddresses))]
@@ -262,7 +262,7 @@ namespace UnitTests
 				Email = invalidInternationalAddress
 			};
 
-			Assert.IsFalse (AreAttributesValid (target));
+			Assert.That (AreAttributesValid (target), Is.False);
 		}
 
 		[Test]
@@ -272,7 +272,7 @@ namespace UnitTests
 				Email = null
 			};
 
-			Assert.IsTrue (AreAttributesValid (target), "Email is allowed to be null");
+			Assert.That (AreAttributesValid (target), Is.True, "Email is allowed to be null");
 		}
 
 		static bool AreAttributesValid (object target)
