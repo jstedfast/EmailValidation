@@ -22,7 +22,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-    <PackageReference Include="AltCover" Version="8.6.125" />
+    <PackageReference Include="AltCover" Version="8.7.3" />
   </ItemGroup>
 
   <ItemGroup>
