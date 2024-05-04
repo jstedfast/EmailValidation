@@ -446,5 +446,106 @@ namespace EmailValidation
 
 			return index == email.Length;
 		}
+
+		/// <summary>
+		/// Validate the specified email address.
+		/// </summary>
+		/// <remarks>
+		/// <para>Validates the syntax of an email address.</para>
+		/// <para>If <paramref name="allowTopLevelDomains"/> is <c>true</c>, then the validator will
+		/// allow addresses with top-level domains like <c>postmaster@dk</c>.</para>
+		/// <para>If <paramref name="allowInternational"/> is <c>true</c>, then the validator
+		/// will use the newer International Email standards for validating the email address.</para>
+		/// </remarks>
+		/// <returns><c>true</c> if the email address is valid; otherwise, <c>false</c>.</returns>
+		/// <param name="email">An email address.</param>
+		/// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+		/// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
+		/// <exception cref="System.ArgumentNullException">
+		/// <paramref name="email"/> is <c>null</c>.
+		/// </exception>
+		public static EmailResult ValidateWithReason (string email, bool allowTopLevelDomains = false, bool allowInternational = false)
+		{
+			int index = 0;
+
+			if (email == null)
+				throw new ArgumentNullException (nameof (email));
+
+			if (email.Length == 0 || Measure (email, 0, email.Length, allowInternational) > MaxEmailAddressLength)
+				return new EmailResult { IsValid = false, ErrorMessage = "Email address is too long" };
+
+			// Local-part = Dot-string / Quoted-string
+			//       ; MAY be case-sensitive
+			//
+			// Dot-string = Atom *("." Atom)
+			//
+			// Quoted-string = DQUOTE *qcontent DQUOTE
+			if (email[index] == '"') {
+				if (!SkipQuoted (email, ref index, allowInternational) || index >= email.Length)
+					return new EmailResult { IsValid = false, ErrorMessage = "Invalid quoted string" };
+			} else {
+				if (!SkipAtom (email, ref index, allowInternational) || index >= email.Length)
+					return new EmailResult { IsValid = false, ErrorMessage = "Invalid atom" };
+
+				while (email[index] == '.') {
+					index++;
+
+					if (index >= email.Length)
+						return new EmailResult { IsValid = false, ErrorMessage = "Invalid dot-string" };
+
+					if (!SkipAtom (email, ref index, allowInternational))
+						return new EmailResult { IsValid = false, ErrorMessage = "Invalid atom" };
+
+					if (index >= email.Length)
+						return new EmailResult { IsValid = false, ErrorMessage = "Invalid dot-string" };
+				}
+			}
+
+			// https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
+			// The maximum total length of a user name or other local-part is 64 octets.
+			int localPartLength = Measure (email, 0, index, allowInternational);
+			if (index + 1 >= email.Length || localPartLength > MaxLocalPartLength || email[index++] != '@')
+				return new EmailResult {
+					IsValid = false,
+					ErrorMessage = "The maximum total length of a user name or other local-part is 64 octets."
+				};
+
+			if (email[index] != '[') {
+				// domain
+				if (!SkipDomain (email, ref index, allowTopLevelDomains, allowInternational))
+					return new EmailResult { IsValid = false, ErrorMessage = "Invalid domain" };
+
+				if (index == email.Length) {
+					return new EmailResult { IsValid = true, ErrorMessage = "Valid email address" };
+				} else {
+					return new EmailResult { IsValid = false, ErrorMessage = "Invalid email address" };
+				}
+			}
+
+			// address literal
+			index++;
+
+			// We need at least 7 more characters. "1.1.1.1" and "IPv6:::" are the shortest literals we can have.
+			if (index + 7 >= email.Length)
+				return new EmailResult { IsValid = false, ErrorMessage = "Invalid address literal" };
+
+			if (string.Compare (email, index, "IPv6:", 0, 5, StringComparison.OrdinalIgnoreCase) == 0) {
+				index += "IPv6:".Length;
+				if (!SkipIPv6Literal (email, ref index))
+					return new EmailResult { IsValid = false, ErrorMessage = "Invalid IPv6 literal" };
+			} else {
+				if (!SkipIPv4Literal (email, ref index))
+					return new EmailResult { IsValid = false, ErrorMessage = "Invalid IPv4 literal" };
+			}
+
+			if (index >= email.Length || email[index++] != ']')
+				return new EmailResult { IsValid = false, ErrorMessage = "Invalid address literal" };
+
+			if (index == email.Length) {
+				return new EmailResult { IsValid = true, ErrorMessage = "Valid email address" };
+			} else {
+				return new EmailResult { IsValid = false, ErrorMessage = "Invalid email address" };
+			}
+		}
 	}
 }

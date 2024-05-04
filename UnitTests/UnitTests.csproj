@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Compile Include="EmailValidationTests.cs" />
+	<Compile Include="EmailValidationWithReasonTests.cs" />
   </ItemGroup>
 
 </Project>

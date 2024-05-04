@@ -40,6 +40,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EmailAttribute.cs" />
     <Compile Include="EmailValidator.cs" />
+    <Compile Include="EmailResult.cs" />
   </ItemGroup>
 
 </Project>
