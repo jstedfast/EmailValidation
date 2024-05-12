@@ -161,12 +161,14 @@ namespace EmailValidation
 			return index > startIndex;
 		}
 
-		static bool SkipSubDomain (string text, ref int index, bool allowInternational, out SubDomainType type)
+		static bool SkipSubDomain (string text, ref int index, bool allowInternational, out SubDomainType type, out EmailValidationError error)
 		{
 			int startIndex = index;
 
-			if (!IsDomainStart (text[index], allowInternational, out type))
+			if (!IsDomainStart (text[index], allowInternational, out type)) {
+				error = new EmailValidationError (EmailValidationErrorCode.InvalidDomainCharacter, index);
 				return false;
+			}
 
 			index++;
 
@@ -179,48 +181,79 @@ namespace EmailValidation
 			int length = Measure (text, startIndex, index, allowInternational);
 
 			// Don't allow single-character top-level domains.
-			if (index == text.Length && length == 1)
-				return false;
-
-			return length <= MaxDomainLabelLength && text[index - 1] != '-';
-		}
-
-		static bool SkipDomain (string text, ref int index, bool allowTopLevelDomains, bool allowInternational)
-		{
-			if (!SkipSubDomain (text, ref index, allowInternational, out var type))
-				return false;
-
-			if (index < text.Length && text[index] == '.') {
-				do {
-					index++;
-
-					if (index == text.Length)
-						return false;
-
-					if (!SkipSubDomain (text, ref index, allowInternational, out type))
-						return false;
-				} while (index < text.Length && text[index] == '.');
-			} else if (!allowTopLevelDomains) {
+			if (index == text.Length && length == 1) {
+				error = new EmailValidationError (EmailValidationErrorCode.IncompleteDomainLabel, startIndex, index);
 				return false;
 			}
 
-			// Note: by allowing AlphaNumeric, we get away with not having to support punycode.
-			if (type == SubDomainType.Numeric)
+			if (length > MaxDomainLabelLength) {
+				error = new EmailValidationError (EmailValidationErrorCode.DomainLabelTooLong, startIndex, index);
 				return false;
+			}
+
+			if (text[index - 1] == '-') {
+				error = new EmailValidationError (EmailValidationErrorCode.InvalidDomainCharacter, index - 1);
+				return false;
+			}
+
+			error = EmailValidationError.None;
 
 			return true;
 		}
 
-		static bool SkipQuoted (string text, ref int index, bool allowInternational)
+		static bool SkipDomain (string text, ref int index, bool allowTopLevelDomains, bool allowInternational, out EmailValidationError error)
 		{
+			int startIndex = index;
+
+			if (!SkipSubDomain (text, ref index, allowInternational, out var type, out error))
+				return false;
+
+			if (index < text.Length) {
+				if (text[index] == '.') {
+					do {
+						index++;
+
+						if (index == text.Length) {
+							error = new EmailValidationError (EmailValidationErrorCode.IncompleteDomain, startIndex, index);
+							return false;
+						}
+
+						if (!SkipSubDomain (text, ref index, allowInternational, out type, out error))
+							return false;
+					} while (index < text.Length && text[index] == '.');
+				} else {
+					error = new EmailValidationError (EmailValidationErrorCode.InvalidDomainCharacter, index);
+					return false;
+				}
+			} else if (!allowTopLevelDomains) {
+				error = new EmailValidationError (EmailValidationErrorCode.IncompleteDomain, startIndex, index);
+				return false;
+			}
+
+			// Note: by allowing AlphaNumeric, we get away with not having to support punycode.
+			if (type == SubDomainType.Numeric) {
+				error = new EmailValidationError (EmailValidationErrorCode.InvalidDomainCharacter, index);
+				return false;
+			}
+
+			error = EmailValidationError.None;
+
+			return true;
+		}
+
+		static bool SkipQuoted (string text, ref int index, bool allowInternational, out EmailValidationError error)
+		{
+			int startIndex = index;
 			bool escaped = false;
 
 			// skip over leading '"'
 			index++;
 
 			while (index < text.Length) {
-				if (IsControl (text[index]) || (text[index] >= 128 && !allowInternational))
+				if (IsControl (text[index]) || (text[index] >= 128 && !allowInternational)) {
+					error = new EmailValidationError (EmailValidationErrorCode.InvalidLocalPartCharacter, index);
 					return false;
+				}
 
 				if (text[index] == '\\') {
 					escaped = !escaped;
@@ -234,16 +267,21 @@ namespace EmailValidation
 				index++;
 			}
 
-			if (index >= text.Length || text[index] != '"')
+			if (index >= text.Length || text[index] != '"') {
+				error = new EmailValidationError (EmailValidationErrorCode.UnterminatedQuotedString, startIndex, index);
 				return false;
+			}
 
 			index++;
+
+			error = EmailValidationError.None;
 
 			return true;
 		}
 
-		static bool SkipIPv4Literal (string text, ref int index)
+		static bool SkipIPv4Literal (string text, ref int index, out EmailValidationError error)
 		{
+			int tokenIndex = index;
 			int groups = 0;
 
 			while (index < text.Length && groups < 4) {
@@ -255,8 +293,10 @@ namespace EmailValidation
 					index++;
 				}
 
-				if (index == startIndex || index - startIndex > 3 || value > 255)
+				if (index == startIndex || index - startIndex > 3 || value > 255) {
+					error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, tokenIndex, index);
 					return false;
+				}
 
 				groups++;
 
@@ -264,7 +304,14 @@ namespace EmailValidation
 					index++;
 			}
 
-			return groups == 4;
+			if (groups < 4) {
+				error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, tokenIndex, index);
+				return false;
+			}
+
+			error = EmailValidationError.None;
+
+			return true;
 		}
 
 		static bool IsHexDigit (char c)
@@ -287,8 +334,9 @@ namespace EmailValidation
 		//             ; The "::" represents at least 2 16-bit groups of zeros
 		//             ; No more than 4 groups in addition to the "::" and
 		//             ; IPv4-address-literal may be present
-		static bool SkipIPv6Literal (string text, ref int index)
+		static bool SkipIPv6Literal (string text, ref int index, out EmailValidationError error)
 		{
+			int tokenIndex = index;
 			bool needGroup = false;
 			bool compact = false;
 			int groups = 0;
@@ -306,15 +354,17 @@ namespace EmailValidation
 					// IPv6v4
 					index = startIndex;
 
-					if (!SkipIPv4Literal (text, ref index))
+					if (!SkipIPv4Literal (text, ref index, out error))
 						return false;
 
 					return compact ? groups <= 4 : groups == 6;
 				}
 
 				int count = index - startIndex;
-				if (count > 4)
+				if (count > 4) {
+					error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, tokenIndex, index);
 					return false;
+				}
 
 				bool comp;
 
@@ -338,23 +388,167 @@ namespace EmailValidation
 					index++;
 
 				count = index - startIndex;
-				if (count > 2)
+				if (count > 2) {
+					error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, tokenIndex, index);
 					return false;
+				}
 
 				if (count == 2) {
-					if (compact)
+					if (compact) {
+						error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, tokenIndex, index);
 						return false;
+					}
 
 					compact = true;
 				} else if (comp) {
 					// expected exactly 2 colons for IPv6-comp or IPv6v4-comp address
+					error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, tokenIndex, index);
 					return false;
 				} else {
 					needGroup = true;
 				}
 			}
 
-			return !needGroup && (compact ? groups <= 6 : groups == 8);
+			if (needGroup || !(compact ? groups <= 6 : groups == 8)) {
+				error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, tokenIndex, index);
+				return false;
+			}
+
+			error = EmailValidationError.None;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Validate the specified email address.
+		/// </summary>
+		/// <remarks>
+		/// <para>Validates the syntax of an email address.</para>
+		/// <para>If <paramref name="allowTopLevelDomains"/> is <c>true</c>, then the validator will
+		/// allow addresses with top-level domains like <c>postmaster@dk</c>.</para>
+		/// <para>If <paramref name="allowInternational"/> is <c>true</c>, then the validator
+		/// will use the newer International Email standards for validating the email address.</para>
+		/// </remarks>
+		/// <returns><c>true</c> if the email address is valid; otherwise, <c>false</c>.</returns>
+		/// <param name="email">An email address.</param>
+		/// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+		/// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
+		/// <param name="error">The error if the email address is invalid.</param>
+		/// <exception cref="System.ArgumentNullException">
+		/// <paramref name="email"/> is <c>null</c>.
+		/// </exception>
+		public static bool TryValidate (string email, bool allowTopLevelDomains, bool allowInternational, out EmailValidationError error)
+		{
+			int index = 0;
+
+			if (email == null)
+				throw new ArgumentNullException (nameof (email));
+
+			if (email.Length == 0) {
+				error = new EmailValidationError (EmailValidationErrorCode.EmptyAddress);
+				return false;
+			}
+
+			if (Measure (email, 0, email.Length, allowInternational) > MaxEmailAddressLength) {
+				error = new EmailValidationError (EmailValidationErrorCode.AddressTooLong);
+				return false;
+			}
+
+			// Local-part = Dot-string / Quoted-string
+			//       ; MAY be case-sensitive
+			//
+			// Dot-string = Atom *("." Atom)
+			//
+			// Quoted-string = DQUOTE *qcontent DQUOTE
+			if (email[index] == '"') {
+				if (!SkipQuoted (email, ref index, allowInternational, out error))
+					return false;
+			} else {
+				if (!SkipAtom (email, ref index, allowInternational)) {
+					error = new EmailValidationError (EmailValidationErrorCode.InvalidLocalPartCharacter, index);
+					return false;
+				}
+
+				while (index < email.Length && email[index] == '.') {
+					index++;
+
+					if (index >= email.Length) {
+						error = new EmailValidationError (EmailValidationErrorCode.IncompleteLocalPart, 0, index);
+						return false;
+					}
+
+					if (!SkipAtom (email, ref index, allowInternational)) {
+						error = new EmailValidationError (EmailValidationErrorCode.InvalidLocalPartCharacter, index);
+						return false;
+					}
+				}
+			}
+
+			// https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
+			// The maximum total length of a user name or other local-part is 64 octets.
+			int localPartLength = Measure (email, 0, index, allowInternational);
+			if (localPartLength > MaxLocalPartLength) {
+				error = new EmailValidationError (EmailValidationErrorCode.LocalPartTooLong, 0, index);
+				return false;
+			}
+
+			if (index >= email.Length) {
+				error = new EmailValidationError (EmailValidationErrorCode.IncompleteLocalPart, 0, index);
+				return false;
+			}
+
+			if (email[index] != '@') {
+				error = new EmailValidationError (EmailValidationErrorCode.InvalidLocalPartCharacter, index);
+				return false;
+			}
+
+			// Skip over '@'
+			index++;
+
+			if (index >= email.Length) {
+				error = new EmailValidationError (EmailValidationErrorCode.IncompleteDomain, index);
+				return false;
+			}
+
+			if (email[index] != '[') {
+				// domain
+				if (!SkipDomain (email, ref index, allowTopLevelDomains, allowInternational, out error))
+					return false;
+
+				return index == email.Length;
+			}
+
+			// address literal
+			index++;
+
+			// We need at least 7 more characters. "1.1.1.1" and "IPv6:::" are the shortest literals we can have.
+			if (index + 7 >= email.Length) {
+				error = new EmailValidationError (EmailValidationErrorCode.InvalidIPAddress, index);
+				return false;
+			}
+
+			if (string.Compare (email, index, "IPv6:", 0, 5, StringComparison.OrdinalIgnoreCase) == 0) {
+				index += "IPv6:".Length;
+				if (!SkipIPv6Literal (email, ref index, out error))
+					return false;
+			} else {
+				if (!SkipIPv4Literal (email, ref index, out error))
+					return false;
+			}
+
+			if (index >= email.Length || email[index++] != ']') {
+				error = new EmailValidationError (EmailValidationErrorCode.UnterminatedIPAddressLiteral, index);
+				return false;
+			}
+
+			if (index < email.Length) {
+				error = new EmailValidationError (EmailValidationErrorCode.UnexpectedCharactersAfterDomain, index);
+				return false;
+			}
+
+			error = EmailValidationError.None;
+
+			return true;
 		}
 
 		/// <summary>
@@ -376,75 +570,7 @@ namespace EmailValidation
 		/// </exception>
 		public static bool Validate (string email, bool allowTopLevelDomains = false, bool allowInternational = false)
 		{
-			int index = 0;
-
-			if (email == null)
-				throw new ArgumentNullException (nameof (email));
-
-			if (email.Length == 0 || Measure (email, 0, email.Length, allowInternational) > MaxEmailAddressLength)
-				return false;
-
-			// Local-part = Dot-string / Quoted-string
-			//       ; MAY be case-sensitive
-			//
-			// Dot-string = Atom *("." Atom)
-			//
-			// Quoted-string = DQUOTE *qcontent DQUOTE
-			if (email[index] == '"') {
-				if (!SkipQuoted (email, ref index, allowInternational) || index >= email.Length)
-					return false;
-			} else {
-				if (!SkipAtom (email, ref index, allowInternational) || index >= email.Length)
-					return false;
-
-				while (email[index] == '.') {
-					index++;
-
-					if (index >= email.Length)
-						return false;
-
-					if (!SkipAtom (email, ref index, allowInternational))
-						return false;
-
-					if (index >= email.Length)
-						return false;
-				}
-			}
-
-			// https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
-			// The maximum total length of a user name or other local-part is 64 octets.
-			int localPartLength = Measure (email, 0, index, allowInternational);
-			if (index + 1 >= email.Length || localPartLength > MaxLocalPartLength || email[index++] != '@')
-				return false;
-
-			if (email[index] != '[') {
-				// domain
-				if (!SkipDomain (email, ref index, allowTopLevelDomains, allowInternational))
-					return false;
-
-				return index == email.Length;
-			}
-
-			// address literal
-			index++;
-
-			// We need at least 7 more characters. "1.1.1.1" and "IPv6:::" are the shortest literals we can have.
-			if (index + 7 >= email.Length)
-				return false;
-
-			if (string.Compare (email, index, "IPv6:", 0, 5, StringComparison.OrdinalIgnoreCase) == 0) {
-				index += "IPv6:".Length;
-				if (!SkipIPv6Literal (email, ref index))
-					return false;
-			} else {
-				if (!SkipIPv4Literal (email, ref index))
-					return false;
-			}
-
-			if (index >= email.Length || email[index++] != ']')
-				return false;
-
-			return index == email.Length;
+			return TryValidate (email, allowTopLevelDomains, allowInternational, out _);
 		}
 	}
 }

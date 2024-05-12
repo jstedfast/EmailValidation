@@ -37,6 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="EmailValidationError.cs" />
+    <Compile Include="EmailValidationErrorCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EmailAttribute.cs" />
     <Compile Include="EmailValidator.cs" />

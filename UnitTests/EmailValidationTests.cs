@@ -107,76 +107,6 @@ namespace UnitTests
 			"uncommon-tld@sld.travel",
 		};
 
-		static readonly string[] InvalidAddresses = {
-			string.Empty,
-			"invalid",
-			"invalid@",
-			"invalid @",
-			"invalid@[10]",
-			"invalid@[10.1]",
-			"invalid@[10.1.52]",
-			"invalid@[256.256.256.256]",
-			"invalid@[IPv6:123456]",
-			"invalid@[127.0.0.1.]",
-			"invalid@[127.0.0.1].",
-			"invalid@[127.0.0.1]x",
-			"invalid@domain1.com@domain2.com",
-			"\"locál-part\"@example.com", // international local-part when allowInternational=false should fail
-			new string ('a', 65) + "@example.com", // local-part too long
-			"invalid@" + new string ('a', 64) + ".com", // subdomain too long
-			"invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 60) + ".com", // too long (254 characters)
-			"invalid@[]", // empty IP literal
-			"invalid@[111.111.111.111", // unenclosed IPv4 literal
-			"invalid@[IPv6:2607:f0d0:1002:51::4", // unenclosed IPv6 literal
-			"invalid@[IPv6:1111::1111::1111]", // invalid IPv6-comp
-			"invalid@[IPv6:1111:::1111::1111]", // more than 2 consecutive :'s in IPv6
-			"invalid@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:555.666.777.888]", // invalid IPv4 address in IPv6v4
-			"invalid@[IPv6:1111:1111]", // incomplete IPv6
-			"invalid@[IPv6:1::2:]", // incomplete IPv6
-			"invalid@[IPv6::1::1]",
-			"\"invalid-qstring@example.com", // unterminated q-string in local-part of the addr-spec
-			"\"control-\u007f-character\"@example.com",
-			"\"control-\u001f-character\"@example.com",
-			"\"control-\\\u007f-character\"@example.com",
-
-			// examples from wikipedia
-			"Abc.example.com",
-			"A@b@c@example.com",
-			"a\"b(c)d,e:f;g<h>i[j\\k]l@example.com",
-			"just\"not\"right@example.com",
-			"this is\"not\\allowed@example.com",
-			"this\\ still\\\"not\\\\allowed@example.com",
-
-			// examples from https://github.com/Sembiance/email-validator
-			"! #$%`|@invalid-characters-in-local.org",
-			"(),:;`|@more-invalid-characters-in-local.org",
-			"* .local-starts-with-dot@sld.com",
-			"<>@[]`|@even-more-invalid-characters-in-local.org",
-			"@missing-local.org",
-			"IP-and-port@127.0.0.1:25",
-			"another-invalid-ip@127.0.0.256",
-			"invalid",
-			"invalid-characters-in-sld@! \"#$%(),/;<>_[]`|.org",
-			"invalid-ip@127.0.0.1.26",
-			"local-ends-with-dot.@sld.com",
-			"missing-at-sign.net",
-			"missing-sld@.com",
-			"missing-tld@sld.",
-			"sld-ends-with-dash@sld-.com",
-			"sld-starts-with-dashsh@-sld.com",
-			"the-character-limit@for-each-part.of-the-domain.is-sixty-four-characters.this-subdomain-is-exactly-sixty-five-characters-so-it-is-invalid1.com",
-			"the-local-part-is-invalid-if-it-is-longer-than-sixty-four-characters@sld.net",
-			"the-total-length@of-an-entire-address.cannot-be-longer-than-two-hundred-and-fifty-six-characters.and-this-address-is-257-characters-exactly.so-it-should-be-invalid.lets-add-some-extra-words-here.to-increase-the-length.beyond-the-256-character-limitation.org",
-			"two..consecutive-dots@sld.com",
-			"unbracketed-IP@127.0.0.1",
-			"dot-first-in-domain@.test.de",
-			"single-character-tld@ns.i",
-
-			// examples of real (invalid) input from real users.
-			"No longer available.",
-			"Moved."
-		};
-
 		static readonly string[] ValidInternationalAddresses = {
 			"伊昭傑@郵件.商務", // Chinese
 			"राम@मोहन.ईन्फो", // Hindi
@@ -185,44 +115,152 @@ namespace UnitTests
 			"𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈𐍈@example.com", // surrogate pair local-part
 		};
 
-		static readonly string[] InvalidInternationalAddresses = {
-			"test@𐍈", // single "character" surrogate-pair domain
+		public class InvalidEmailAddress
+		{
+			public readonly string EmailAddress;
+			public readonly EmailValidationErrorCode ErrorCode;
+			public readonly int? TokenIndex;
+			public readonly int? ErrorIndex;
+
+			public InvalidEmailAddress (string emailAddress, EmailValidationErrorCode errorCode, int? tokenIndex = null, int? errorIndex = null)
+			{
+				EmailAddress = emailAddress;
+				ErrorCode = errorCode;
+				TokenIndex = tokenIndex;
+				ErrorIndex = errorIndex;
+			}
+
+			public override string ToString ()
+			{
+				return EmailAddress;
+			}
+		}
+
+		static readonly InvalidEmailAddress[] InvalidAddresses = {
+			new InvalidEmailAddress ("", EmailValidationErrorCode.EmptyAddress, null, null),
+			new InvalidEmailAddress ("invalid", EmailValidationErrorCode.IncompleteLocalPart, 0, 7),
+			new InvalidEmailAddress ("\"invalid\"", EmailValidationErrorCode.IncompleteLocalPart, 0, 9),
+			new InvalidEmailAddress ("invalid@", EmailValidationErrorCode.IncompleteDomain, 8, 8),
+			new InvalidEmailAddress ("invalid @", EmailValidationErrorCode.InvalidLocalPartCharacter, 7, 7),
+			new InvalidEmailAddress ("invalid@[10]", EmailValidationErrorCode.InvalidIPAddress, 9, 9),
+			new InvalidEmailAddress ("invalid@[10.1]", EmailValidationErrorCode.InvalidIPAddress, 9, 9),
+			new InvalidEmailAddress ("invalid@[10.1.52]", EmailValidationErrorCode.InvalidIPAddress, 9, 16),
+			new InvalidEmailAddress ("invalid@[256.256.256.256]", EmailValidationErrorCode.InvalidIPAddress, 9, 12),
+			new InvalidEmailAddress ("invalid@[IPv6:123456]", EmailValidationErrorCode.InvalidIPAddress, 14, 20),
+			new InvalidEmailAddress ("invalid@[127.0.0.1.]", EmailValidationErrorCode.UnterminatedIPAddressLiteral, 19, 19),
+			new InvalidEmailAddress ("invalid@[127.0.0.1].", EmailValidationErrorCode.UnexpectedCharactersAfterDomain, 19, 19),
+			new InvalidEmailAddress ("invalid@[127.0.0.1]x", EmailValidationErrorCode.UnexpectedCharactersAfterDomain, 19, 19),
+			new InvalidEmailAddress ("invalid@domain1.com@domain2.com", EmailValidationErrorCode.None, null, null),
+			new InvalidEmailAddress ("\"locál-part\"@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 4, 4), // international local-part when allowInternational=false should fail
+			new InvalidEmailAddress (new string ('a', 65) + "@example.com", EmailValidationErrorCode.LocalPartTooLong, 0, 65), // local-part too long
+			new InvalidEmailAddress ("invalid@" + new string ('a', 64) + ".com", EmailValidationErrorCode.DomainLabelTooLong, 8, 72), // subdomain too long
+			new InvalidEmailAddress ("invalid@" + new string ('a', 60) + "." + new string ('b', 60) + "." + new string ('c', 60) + "." + new string ('d', 60) + ".com", EmailValidationErrorCode.AddressTooLong, null, null), // too long (254 characters)
+			new InvalidEmailAddress ("invalid@[]", EmailValidationErrorCode.InvalidIPAddress, 9, 9), // empty IP literal
+			new InvalidEmailAddress ("invalid@[192.168.10", EmailValidationErrorCode.InvalidIPAddress, 9, 19), // incomplete IPv4 literal
+			new InvalidEmailAddress ("invalid@[111.111.111.111", EmailValidationErrorCode.UnterminatedIPAddressLiteral, 24, 24), // unenclosed IPv4 literal
+			new InvalidEmailAddress ("invalid@[IPv6:2607:f0d0:1002:51::4", EmailValidationErrorCode.UnterminatedIPAddressLiteral, 34, 34), // unenclosed IPv6 literal
+			new InvalidEmailAddress ("invalid@[IPv6:1111::1111::1111]", EmailValidationErrorCode.InvalidIPAddress, 14, 26), // invalid IPv6-comp
+			new InvalidEmailAddress ("invalid@[IPv6:1111:::1111::1111]", EmailValidationErrorCode.InvalidIPAddress, 14, 21), // more than 2 consecutive :'s in IPv6
+			new InvalidEmailAddress ("invalid@[IPv6:aaaa:aaaa:aaaa:aaaa:aaaa:aaaa:555.666.777.888]", EmailValidationErrorCode.InvalidIPAddress, 44, 47), // invalid IPv4 address in IPv6v4
+			new InvalidEmailAddress ("invalid@[IPv6:1111:1111]", EmailValidationErrorCode.InvalidIPAddress, 14, 23), // incomplete IPv6
+			new InvalidEmailAddress ("invalid@[IPv6:1::2:]", EmailValidationErrorCode.InvalidIPAddress, 14, 19), // incomplete IPv6
+			new InvalidEmailAddress ("invalid@[IPv6::1::1]", EmailValidationErrorCode.InvalidIPAddress, 14, 15),
+			new InvalidEmailAddress ("\"invalid-qstring@example.com", EmailValidationErrorCode.UnterminatedQuotedString, 0, 28), // unterminated q-string in local-part of the addr-spec
+			new InvalidEmailAddress ("\"control-\u007f-character\"@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 9, 9),
+			new InvalidEmailAddress ("\"control-\u001f-character\"@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 9, 9),
+			new InvalidEmailAddress ("\"control-\\\u007f-character\"@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 10, 10),
+
+			// examples from Wikipedia
+			new InvalidEmailAddress ("Abc.example.com", EmailValidationErrorCode.IncompleteLocalPart, 0, 15),
+			new InvalidEmailAddress ("A@b@c@example.com", EmailValidationErrorCode.InvalidDomainCharacter, 3, 3),
+			new InvalidEmailAddress ("a\"b(c)d,e:f;g<h>i[j\\k]l@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 1, 1),
+			new InvalidEmailAddress ("just\"not\"right@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 4, 4),
+			new InvalidEmailAddress ("this is\"not\\allowed@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 4, 4),
+			new InvalidEmailAddress ("this\\ still\\\"not\\\\allowed@example.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 4, 4),
+
+			// examples from https://github.com/Sembiance/email-validator
+			new InvalidEmailAddress ("! #$%`|@invalid-characters-in-local.org", EmailValidationErrorCode.InvalidLocalPartCharacter, 1, 1),
+			new InvalidEmailAddress ("(),:;`|@more-invalid-characters-in-local.org", EmailValidationErrorCode.InvalidLocalPartCharacter, 0, 0),
+			new InvalidEmailAddress ("* .local-starts-with-dot@sld.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 1, 1),
+			new InvalidEmailAddress ("<>@[]`|@even-more-invalid-characters-in-local.org", EmailValidationErrorCode.InvalidLocalPartCharacter, 0, 0),
+			new InvalidEmailAddress ("@missing-local.org", EmailValidationErrorCode.InvalidLocalPartCharacter, 0, 0),
+			new InvalidEmailAddress ("IP-and-port@127.0.0.1:25", EmailValidationErrorCode.InvalidDomainCharacter, 21, 21),
+			new InvalidEmailAddress ("another-invalid-ip@127.0.0.256", EmailValidationErrorCode.InvalidDomainCharacter, 30, 30),
+			new InvalidEmailAddress ("invalid", EmailValidationErrorCode.IncompleteLocalPart, 0, 7),
+			new InvalidEmailAddress ("invalid-characters-in-sld@! \"#$%(),/;<>_[]`|.org", EmailValidationErrorCode.InvalidDomainCharacter, 26, 26),
+			new InvalidEmailAddress ("invalid-ip@127.0.0.1.26", EmailValidationErrorCode.InvalidDomainCharacter, 23, 23),
+			new InvalidEmailAddress ("local-ends-with-dot.@sld.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 20, 20),
+			new InvalidEmailAddress ("missing-at-sign.net", EmailValidationErrorCode.IncompleteLocalPart, 0, 19),
+			new InvalidEmailAddress ("missing-sld@.com", EmailValidationErrorCode.InvalidDomainCharacter, 12, 12),
+			new InvalidEmailAddress ("missing-tld@sld.", EmailValidationErrorCode.IncompleteDomain, 12, 16),
+			new InvalidEmailAddress ("sld-ends-with-dash@sld-.com", EmailValidationErrorCode.InvalidDomainCharacter, 22, 22),
+			new InvalidEmailAddress ("sld-starts-with-dashsh@-sld.com", EmailValidationErrorCode.InvalidDomainCharacter, 23, 23),
+			new InvalidEmailAddress ("the-character-limit@for-each-part.of-the-domain.is-sixty-four-characters.this-subdomain-is-exactly-sixty-five-characters-so-it-is-invalid1.com", EmailValidationErrorCode.DomainLabelTooLong, 73, 138),
+			new InvalidEmailAddress ("the-local-part-is-invalid-if-it-is-longer-than-sixty-four-characters@sld.net", EmailValidationErrorCode.LocalPartTooLong, 0, 68),
+			new InvalidEmailAddress ("the-total-length@of-an-entire-address.cannot-be-longer-than-two-hundred-and-fifty-six-characters.and-this-address-is-257-characters-exactly.so-it-should-be-invalid.lets-add-some-extra-words-here.to-increase-the-length.beyond-the-256-character-limitation.org", EmailValidationErrorCode.AddressTooLong, null, null),
+			new InvalidEmailAddress ("two..consecutive-dots@sld.com", EmailValidationErrorCode.InvalidLocalPartCharacter, 4, 4),
+			new InvalidEmailAddress ("unbracketed-IP@127.0.0.1", EmailValidationErrorCode.IncompleteDomainLabel, 23, 24),
+			new InvalidEmailAddress ("dot-first-in-domain@.test.de", EmailValidationErrorCode.InvalidDomainCharacter, 20, 20),
+			new InvalidEmailAddress ("single-character-tld@ns.i", EmailValidationErrorCode.IncompleteDomainLabel, 24, 25),
+
+			// examples of real (invalid) input from real users.
+			new InvalidEmailAddress ("No longer available.", EmailValidationErrorCode.InvalidLocalPartCharacter, 2, 2),
+			new InvalidEmailAddress ("Moved.", EmailValidationErrorCode.IncompleteLocalPart, 0, 6)
+		};
+
+		static readonly InvalidEmailAddress[] InvalidInternationalAddresses = {
+			new InvalidEmailAddress ("test@𐍈", EmailValidationErrorCode.IncompleteDomainLabel, 5, 7), // single "character" surrogate-pair domain
 		};
 
 		[TestCaseSource(nameof(ValidAddresses))]
 		public void TestValidAddresses (string validAddress)
 		{
-			Assert.That (EmailValidator.Validate (validAddress, true), Is.True);
+			Assert.That (EmailValidator.Validate (validAddress, true, false), Is.True, "Validate");
+			Assert.That (EmailValidator.TryValidate (validAddress, true, false, out _), Is.True, "TryValidate");
 		}
 
 		[TestCaseSource(nameof(InvalidAddresses))]
-		public void TestInvalidAddresses (string invalidAddress)
+		public void TestInvalidAddresses (InvalidEmailAddress invalidAddress)
 		{
-			Assert.That (EmailValidator.Validate (invalidAddress, true), Is.False);
+			Assert.That (EmailValidator.Validate (invalidAddress.EmailAddress, true, false), Is.False, "Validate");
+			Assert.That (EmailValidator.TryValidate (invalidAddress.EmailAddress, true, false, out var error), Is.False, "TryValidate");
+			Assert.That (error.Code, Is.EqualTo (invalidAddress.ErrorCode), "ErrorCode");
+			Assert.That (error.TokenIndex, Is.EqualTo (invalidAddress.TokenIndex));
+			Assert.That (error.ErrorIndex, Is.EqualTo (invalidAddress.ErrorIndex));
 		}
 
 		[Test]
 		public void TestInvalidAddressTopLevelDomain ()
 		{
-			Assert.That (EmailValidator.Validate ("invalid@tld"), Is.False, "Top-level domains not allowed.");
+			Assert.That (EmailValidator.Validate ("invalid@tld"), Is.False, "Validate");
+			Assert.That (EmailValidator.TryValidate ("invalid@tld", false, false, out var error), Is.False, "TryValidate");
+			Assert.That (error.Code, Is.EqualTo (EmailValidationErrorCode.IncompleteDomain));
+			Assert.That (error.TokenIndex, Is.EqualTo (8));
+			Assert.That (error.ErrorIndex, Is.EqualTo (11));
 		}
 
 		[TestCaseSource(nameof(ValidInternationalAddresses))]
 		public void TestValidInternationalAddresses (string validInternationalAddress)
 		{
-			Assert.That (EmailValidator.Validate (validInternationalAddress, true, true), Is.True);
+			Assert.That (EmailValidator.Validate (validInternationalAddress, true, true), Is.True, "Validate");
+			Assert.That (EmailValidator.TryValidate (validInternationalAddress, true, true, out _), Is.True, "TryValidate");
 		}
 
 		[TestCaseSource(nameof(InvalidInternationalAddresses))]
-		public void TestInvalidInternationalAddresses (string invalidInternationalAddress)
+		public void TestInvalidInternationalAddresses (InvalidEmailAddress invalidInternationalAddress)
 		{
-			Assert.That (EmailValidator.Validate (invalidInternationalAddress, true, true), Is.False);
+			Assert.That (EmailValidator.Validate (invalidInternationalAddress.EmailAddress, true, true), Is.False, "Validate");
+			Assert.That (EmailValidator.TryValidate (invalidInternationalAddress.EmailAddress, true, true, out var error), Is.False, "TryValidate");
+			Assert.That (error.Code, Is.EqualTo (invalidInternationalAddress.ErrorCode), "ErrorCode");
+			Assert.That (error.TokenIndex, Is.EqualTo (invalidInternationalAddress.TokenIndex));
+			Assert.That (error.ErrorIndex, Is.EqualTo (invalidInternationalAddress.ErrorIndex));
 		}
 
 		[Test]
 		public void TestArgumentNullException ()
 		{
-			Assert.Throws<ArgumentNullException> (() => EmailValidator.Validate (null, true, true), "Null Address");
+			Assert.Throws<ArgumentNullException> (() => EmailValidator.Validate (null, true, true), "Validate null Address");
+			Assert.Throws<ArgumentNullException> (() => EmailValidator.TryValidate (null, true, true, out _), "TryValidate null Address");
 		}
 
 		[TestCaseSource(nameof(ValidAddresses))]
@@ -236,10 +274,10 @@ namespace UnitTests
 		}
 
 		[TestCaseSource(nameof(InvalidAddresses))]
-		public void TestValidationAttributeInvalidAddresses (string invalidAddress)
+		public void TestValidationAttributeInvalidAddresses (InvalidEmailAddress invalidAddress)
 		{
 			var target = new EmailValidationTarget () {
-				Email = invalidAddress
+				Email = invalidAddress.EmailAddress
 			};
 
 			Assert.That (AreAttributesValid (target), Is.False);
@@ -256,10 +294,10 @@ namespace UnitTests
 		}
 
 		[TestCaseSource(nameof(InvalidInternationalAddresses))]
-		public void TestValidationAttributeInvalidInternationalAddresses (string invalidInternationalAddress)
+		public void TestValidationAttributeInvalidInternationalAddresses (InvalidEmailAddress invalidInternationalAddress)
 		{
 			var target = new InternationalEmailValidationTarget () {
-				Email = invalidInternationalAddress
+				Email = invalidInternationalAddress.EmailAddress
 			};
 
 			Assert.That (AreAttributesValid (target), Is.False);
