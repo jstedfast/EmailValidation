@@ -212,21 +212,21 @@ namespace UnitTests
 			new InvalidEmailAddress ("test@𐍈", EmailValidationErrorCode.IncompleteDomainLabel, 5, 7), // single "character" surrogate-pair domain
 		};
 
-		[TestCaseSource(nameof(ValidAddresses))]
-		public void TestValidAddresses (string validAddress)
+		[TestCaseSource (nameof (ValidAddresses))]
+		public void TestValidAddresses (string email)
 		{
-			Assert.That (EmailValidator.Validate (validAddress, true, false), Is.True, "Validate");
-			Assert.That (EmailValidator.TryValidate (validAddress, true, false, out _), Is.True, "TryValidate");
+			Assert.That (EmailValidator.Validate (email, true, false), Is.True, "Validate");
+			Assert.That (EmailValidator.TryValidate (email, true, false, out _), Is.True, "TryValidate");
 		}
 
-		[TestCaseSource(nameof(InvalidAddresses))]
-		public void TestInvalidAddresses (InvalidEmailAddress invalidAddress)
+		[TestCaseSource (nameof (InvalidAddresses))]
+		public void TestInvalidAddresses (InvalidEmailAddress invalid)
 		{
-			Assert.That (EmailValidator.Validate (invalidAddress.EmailAddress, true, false), Is.False, "Validate");
-			Assert.That (EmailValidator.TryValidate (invalidAddress.EmailAddress, true, false, out var error), Is.False, "TryValidate");
-			Assert.That (error.Code, Is.EqualTo (invalidAddress.ErrorCode), "ErrorCode");
-			Assert.That (error.TokenIndex, Is.EqualTo (invalidAddress.TokenIndex));
-			Assert.That (error.ErrorIndex, Is.EqualTo (invalidAddress.ErrorIndex));
+			Assert.That (EmailValidator.Validate (invalid.EmailAddress, true, false), Is.False, "Validate");
+			Assert.That (EmailValidator.TryValidate (invalid.EmailAddress, true, false, out var error), Is.False, "TryValidate");
+			Assert.That (error.Code, Is.EqualTo (invalid.ErrorCode), "ErrorCode");
+			Assert.That (error.TokenIndex, Is.EqualTo (invalid.TokenIndex));
+			Assert.That (error.ErrorIndex, Is.EqualTo (invalid.ErrorIndex));
 		}
 
 		[Test]
@@ -239,21 +239,21 @@ namespace UnitTests
 			Assert.That (error.ErrorIndex, Is.EqualTo (11));
 		}
 
-		[TestCaseSource(nameof(ValidInternationalAddresses))]
-		public void TestValidInternationalAddresses (string validInternationalAddress)
+		[TestCaseSource (nameof (ValidInternationalAddresses))]
+		public void TestValidInternationalAddresses (string email)
 		{
-			Assert.That (EmailValidator.Validate (validInternationalAddress, true, true), Is.True, "Validate");
-			Assert.That (EmailValidator.TryValidate (validInternationalAddress, true, true, out _), Is.True, "TryValidate");
+			Assert.That (EmailValidator.Validate (email, true, true), Is.True, "Validate");
+			Assert.That (EmailValidator.TryValidate (email, true, true, out _), Is.True, "TryValidate");
 		}
 
-		[TestCaseSource(nameof(InvalidInternationalAddresses))]
-		public void TestInvalidInternationalAddresses (InvalidEmailAddress invalidInternationalAddress)
+		[TestCaseSource (nameof (InvalidInternationalAddresses))]
+		public void TestInvalidInternationalAddresses (InvalidEmailAddress invalid)
 		{
-			Assert.That (EmailValidator.Validate (invalidInternationalAddress.EmailAddress, true, true), Is.False, "Validate");
-			Assert.That (EmailValidator.TryValidate (invalidInternationalAddress.EmailAddress, true, true, out var error), Is.False, "TryValidate");
-			Assert.That (error.Code, Is.EqualTo (invalidInternationalAddress.ErrorCode), "ErrorCode");
-			Assert.That (error.TokenIndex, Is.EqualTo (invalidInternationalAddress.TokenIndex));
-			Assert.That (error.ErrorIndex, Is.EqualTo (invalidInternationalAddress.ErrorIndex));
+			Assert.That (EmailValidator.Validate (invalid.EmailAddress, true, true), Is.False, "Validate");
+			Assert.That (EmailValidator.TryValidate (invalid.EmailAddress, true, true, out var error), Is.False, "TryValidate");
+			Assert.That (error.Code, Is.EqualTo (invalid.ErrorCode), "ErrorCode");
+			Assert.That (error.TokenIndex, Is.EqualTo (invalid.TokenIndex));
+			Assert.That (error.ErrorIndex, Is.EqualTo (invalid.ErrorIndex));
 		}
 
 		[Test]
@@ -263,41 +263,41 @@ namespace UnitTests
 			Assert.Throws<ArgumentNullException> (() => EmailValidator.TryValidate (null, true, true, out _), "TryValidate null Address");
 		}
 
-		[TestCaseSource(nameof(ValidAddresses))]
-		public void TestValidationAttributeValidAddresses (string validAddress)
+		[TestCaseSource (nameof (ValidAddresses))]
+		public void TestValidationAttributeValidAddresses (string email)
 		{
 			var target = new EmailValidationTarget () {
-				Email = validAddress
+				Email = email
 			};
 
 			Assert.That (AreAttributesValid (target), Is.True);
 		}
 
-		[TestCaseSource(nameof(InvalidAddresses))]
-		public void TestValidationAttributeInvalidAddresses (InvalidEmailAddress invalidAddress)
+		[TestCaseSource (nameof (InvalidAddresses))]
+		public void TestValidationAttributeInvalidAddresses (InvalidEmailAddress invalid)
 		{
 			var target = new EmailValidationTarget () {
-				Email = invalidAddress.EmailAddress
+				Email = invalid.EmailAddress
 			};
 
 			Assert.That (AreAttributesValid (target), Is.False);
 		}
 
-		[TestCaseSource(nameof(ValidInternationalAddresses))]
-		public void TestValidationAttributeValidInternationalAddresses (string validInternationalAddress)
+		[TestCaseSource (nameof (ValidInternationalAddresses))]
+		public void TestValidationAttributeValidInternationalAddresses (string email)
 		{
 			var target = new InternationalEmailValidationTarget () {
-				Email = validInternationalAddress
+				Email = email
 			};
 
 			Assert.That (AreAttributesValid (target), Is.True);
 		}
 
-		[TestCaseSource(nameof(InvalidInternationalAddresses))]
-		public void TestValidationAttributeInvalidInternationalAddresses (InvalidEmailAddress invalidInternationalAddress)
+		[TestCaseSource (nameof (InvalidInternationalAddresses))]
+		public void TestValidationAttributeInvalidInternationalAddresses (InvalidEmailAddress invalid)
 		{
 			var target = new InternationalEmailValidationTarget () {
-				Email = invalidInternationalAddress.EmailAddress
+				Email = invalid.EmailAddress
 			};
 
 			Assert.That (AreAttributesValid (target), Is.False);
