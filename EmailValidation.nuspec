@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata minClientVersion="2.12">
     <id>EmailValidation</id>
-    <version>1.0.10</version>
+    <version>1.2.0</version>
     <title>EmailValidation</title>
     <authors>Jeffrey Stedfast</authors>
     <owners>Jeffrey Stedfast</owners>
@@ -15,12 +15,8 @@
 Supports mail addresses as defined in rfc5322 as well as the new Internationalized Mail Address standards (rfc653x).</description>
     <summary>A simple (but correct) .NET class for validating email addresses.</summary>
     <releaseNotes>
-* Fixed the validator to disallow whitespace in international atoms (local-part and domains).
-* FIxed the EmailAttribute to be applicable to parameters as well.
-* Fixed the EmailAttribute to allow null email values.
-* Drop support for net452 and net5.0.
-* Add support for net462 and net6.0.
-    </releaseNotes>
+* Added new TryValidate() method which reports errors.
+	</releaseNotes>
     <copyright>Jeffrey Stedfast</copyright>
     <language>en-US</language>
     <tags>email validation</tags>
