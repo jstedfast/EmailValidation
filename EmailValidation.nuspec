@@ -24,7 +24,7 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
     </frameworkAssemblies>
     <dependencies>
       <group targetFramework="net462" />
-      <group targetFramework="net6.0">
+      <group targetFramework="net8.0">
         <dependency id="System.ComponentModel.Annotations" version="5.0.0" />
       </group>
       <group targetFramework=".NETStandard2.0">
@@ -38,8 +38,8 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
   <files>
     <file src="EmailValidation\bin\Release\net462\EmailValidation.dll" target="lib\net462\EmailValidation.dll" />
     <file src="EmailValidation\bin\Release\net462\EmailValidation.xml" target="lib\net462\EmailValidation.xml" />
-    <file src="EmailValidation\bin\Release\net6.0\EmailValidation.dll" target="lib\net6.0\EmailValidation.dll" />
-    <file src="EmailValidation\bin\Release\net6.0\EmailValidation.xml" target="lib\net6.0\EmailValidation.xml" />
+    <file src="EmailValidation\bin\Release\net8.0\EmailValidation.dll" target="lib\net8.0\EmailValidation.dll" />
+    <file src="EmailValidation\bin\Release\net8.0\EmailValidation.xml" target="lib\net8.0\EmailValidation.xml" />
     <file src="EmailValidation\bin\Release\netstandard2.0\EmailValidation.dll" target="lib\netstandard2.0\EmailValidation.dll" />
     <file src="EmailValidation\bin\Release\netstandard2.0\EmailValidation.xml" target="lib\netstandard2.0\EmailValidation.xml" />
     <file src="EmailValidation\bin\Release\netstandard2.1\EmailValidation.dll" target="lib\netstandard2.1\EmailValidation.dll" />
