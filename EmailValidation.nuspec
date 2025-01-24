@@ -24,9 +24,7 @@ Supports mail addresses as defined in rfc5322 as well as the new Internationaliz
     </frameworkAssemblies>
     <dependencies>
       <group targetFramework="net462" />
-      <group targetFramework="net8.0">
-        <dependency id="System.ComponentModel.Annotations" version="5.0.0" />
-      </group>
+      <group targetFramework="net8.0" />
       <group targetFramework=".NETStandard2.0">
         <dependency id="System.ComponentModel.Annotations" version="5.0.0" />
       </group>
