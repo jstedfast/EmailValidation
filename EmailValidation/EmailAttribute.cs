@@ -46,7 +46,35 @@ namespace EmailValidation
 		/// </remarks>
 		/// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
 		/// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
-		public EmailAttribute (bool allowTopLevelDomains = false, bool allowInternational = false)
+		public EmailAttribute (bool allowTopLevelDomains = false, bool allowInternational = false) : this ("Email invalid", allowTopLevelDomains, allowInternational)
+		{
+		}
+
+		/// <summary>
+		/// Instantiates a new instance of <see cref="EmailAttribute"/>.
+		/// </summary>
+		/// <remarks>
+		/// Creates a new <see cref="EmailAttribute"/>.
+		/// </remarks>
+		/// <param name="errorMessage">The error message to use when validation fails.</param>
+		/// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+		/// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
+		public EmailAttribute (string errorMessage, bool allowTopLevelDomains = false, bool allowInternational = false) : base (errorMessage)
+		{
+			AllowTopLevelDomains = allowTopLevelDomains;
+			AllowInternational = allowInternational;
+		}
+
+		/// <summary>
+		/// Instantiates a new instance of <see cref="EmailAttribute"/>.
+		/// </summary>
+		/// <remarks>
+		/// Creates a new <see cref="EmailAttribute"/>.
+		/// </remarks>
+		/// <param name="errorMessageAccessor">The <see cref="Func{T}" /> that will return an error message.</param>
+		/// <param name="allowTopLevelDomains"><c>true</c> if the validator should allow addresses at top-level domains; otherwise, <c>false</c>.</param>
+		/// <param name="allowInternational"><c>true</c> if the validator should allow international characters; otherwise, <c>false</c>.</param>
+		public EmailAttribute (Func<string> errorMessageAccessor, bool allowTopLevelDomains = false, bool allowInternational = false) : base (errorMessageAccessor)
 		{
 			AllowTopLevelDomains = allowTopLevelDomains;
 			AllowInternational = allowInternational;
@@ -86,7 +114,7 @@ namespace EmailValidation
 			if (value == null || EmailValidator.Validate ((string) value, AllowTopLevelDomains, AllowInternational))
 				return ValidationResult.Success;
 
-			return new ValidationResult ("Email invalid", memberNames);
+			return new ValidationResult (ErrorMessage, memberNames);
 		}
 
 		/// <summary>
