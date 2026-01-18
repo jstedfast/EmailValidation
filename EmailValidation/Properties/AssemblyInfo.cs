@@ -3,7 +3,7 @@
 //
 // Author: Jeffrey Stedfast <jestedfa@microsoft.com>
 //
-// Copyright (c) 2013-2025 Jeffrey Stedfast
+// Copyright (c) 2013-2026 Jeffrey Stedfast
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("")]
 [assembly: AssemblyProduct ("EmailValidation")]
-[assembly: AssemblyCopyright ("Copyright © 2013-2025 Jeffrey Stedfast")]
+[assembly: AssemblyCopyright ("Copyright © 2013-2026 Jeffrey Stedfast")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
