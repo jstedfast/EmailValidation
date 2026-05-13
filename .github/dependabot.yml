@@ -3,7 +3,7 @@
 version: 2
 updates:
   - package-ecosystem: "nuget"
-    directory: "/"
+    directory: "/EmailValidation"
     schedule:
       interval: "weekly"
       day: "monday"
