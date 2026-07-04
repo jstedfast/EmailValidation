@@ -1,0 +1,117 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    environment: release
+    env:
+      BUILD_PLATFORM: Any CPU
+    permissions:
+      id-token: write # Required for requesting the JWT
+      contents: read
+
+    steps:
+
+    # Validate that the tag is a release tag (e.g., 1.0.0 or 1.0.0.0)
+    - name: Validate Release Tag
+      shell: pwsh
+      run: |
+        $TAG = $env:GITHUB_REF -replace '^refs/tags/', ''
+
+        if ($TAG -match '^[0-9]+\.[0-9]+\.[0-9]+$' -or $TAG -match '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$') {
+          Write-Host "Valid version tag: $TAG"
+        } else {
+          Write-Host "Invalid version tag: $TAG"
+          exit 1
+        }
+
+    # Setup/Install the .NET SDKs
+    - name: Setup/Install the .NET SDKs
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: |
+          8.0.x
+          10.0.x
+
+    # Setup MSBuild (needed for building .NET Framework projects)
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v3
+
+    # Checkout repository
+    - name: Checkout repository
+      uses: actions/checkout@v6
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        submodules: recursive
+        fetch-depth: 0
+
+    # Restore NuGet packages
+    - name: Run .NET restore
+      shell: pwsh
+      run: |
+        dotnet restore $env:SOLUTION_PATH
+
+    # Restore .NET tools
+    - name: Run .NET tool restore
+      shell: pwsh
+      run: |
+        dotnet tool restore
+
+    # Build
+    - name: Build
+      shell: pwsh
+      run: |
+        dotnet msbuild EmailValidation.sln -property:Platform=$env:BUILD_PLATFORM -property:Configuration=Release
+
+    # Create NuGet Package
+    - name: Create NuGet Package
+      shell: pwsh
+      run: |
+        nuget pack EmailValidation.nuspec
+
+    # Install Sign CLI tool
+    - name: Install Sign CLI tool
+      run: dotnet tool install --tool-path . --prerelease sign
+    
+    # Login to Azure using a ServicePrincipal configured to authenticate agaist a GitHub Action
+    - name: 'Az CLI login'
+      uses: azure/login@v3
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    # Sign NuGet Packages using Sign CLI tool and Azure Key Vault
+    - name: Sign NuGet Package
+      shell: pwsh
+      run: >
+        ./sign code azure-key-vault
+        EmailValidation.*.nupkg
+        --base-directory "${{ github.workspace }}"
+        --publisher-name "MimeKit"
+        --description "EmailValidation"
+        --description-url "https://github.com/jstedfast/EmailValidation"
+        --azure-credential-type "azure-cli"
+        --azure-key-vault-url "https://sc-mimekit.vault.azure.net/"
+        --azure-key-vault-certificate "SC-MIMEKIT"
+
+    # Get a short-lived NuGet API key
+    - name: Get NuGet API Key
+      uses: NuGet/login@v3
+      id: nuget_login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
+    # Publish EmailValidation.{version}.nupkg to NuGet.Org
+    - name: Push Package to NuGet.org
+      shell: pwsh
+      run: |
+        nuget push $env:NUGET_PKG_PATH -ApiKey $env:NUGET_API_KEY -Source https://api.nuget.org/v3/index.json
+      env:
+        NUGET_PKG_PATH: EmailValidation.*.nupkg
+        NUGET_API_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
