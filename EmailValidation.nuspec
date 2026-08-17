@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata minClientVersion="2.12">
     <id>EmailValidation</id>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <title>EmailValidation</title>
     <authors>Jeffrey Stedfast</authors>
     <owners>Jeffrey Stedfast</owners>
@@ -15,9 +15,8 @@
 Supports mail addresses as defined in rfc5322 as well as the new Internationalized Mail Address standards (rfc653x).</description>
     <summary>A simple (but correct) .NET class for validating email addresses.</summary>
     <releaseNotes>
-* Dropped support for net6.0 but added net8.0 in its place.
-* Allow custom error messages in EmailAttribute.
-	</releaseNotes>
+* Added support for .NET 10.0.
+    </releaseNotes>
     <copyright>Jeffrey Stedfast</copyright>
     <language>en-US</language>
     <tags>email validation</tags>
